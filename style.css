@@ -39,6 +39,39 @@ body {
   pointer-events: none; /* Allow clicks to pass through to the square */
 }
 
+.square.selected {
+  box-shadow: inset 0 0 0 3px #ffff00;
+}
+
+.legal-move-indicator {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  background-color: rgba(0, 0, 0, 0.4);
+  border-radius: 50%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 5;
+  pointer-events: none;
+}
+
+.legal-move-indicator.capture-indicator {
+  width: 48px;
+  height: 48px;
+  background-color: transparent;
+  border: 4px solid rgba(255, 0, 0, 0.6);
+  border-radius: 50%;
+}
+
+.square.legal-move {
+  cursor: pointer;
+}
+
+.square.legal-move:hover {
+  box-shadow: inset 0 0 0 2px rgba(0, 150, 255, 0.5);
+}
+
 .light {
   background-color: #f0d9b5;
 }
