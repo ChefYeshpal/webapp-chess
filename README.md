@@ -7,3 +7,7 @@ The entire point of this project is to help me in making more interactive websit
 - 23 Sept 2025
     - Created the project
     - Added index.html, style.css, and app.js files and updated base code
+    - Made a square chess board along with movable pieces
+        - Currently they're just letters, but we'll see if I can design some of them...
+    - Added square number/alphabets to the board
+        - Will alternate in colours, depending on which colour square they are on

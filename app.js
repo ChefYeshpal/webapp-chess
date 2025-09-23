@@ -21,7 +21,8 @@ function createBoard() {
       const square = document.createElement('div');
       square.classList.add('square');
 
-      if ((rankIdx + fileIdx) % 2 === 0) {
+      const isLightSquare = (rankIdx + fileIdx) % 2 === 0;
+      if (isLightSquare) {
         square.classList.add('light');
       } else {
         square.classList.add('dark');
@@ -34,12 +35,14 @@ function createBoard() {
         const rankLabel = document.createElement('div');
         rankLabel.classList.add('rank-label');
         rankLabel.textContent = rank;
+        rankLabel.style.color = isLightSquare ? 'rgba(0, 0, 0, 0.6)' : 'rgba(255, 255, 255, 0.6)';
         square.appendChild(rankLabel);
       }
       if (rank === 1) {
         const fileLabel = document.createElement('div');
         fileLabel.classList.add('file-label');
         fileLabel.textContent = files[fileIdx];
+        fileLabel.style.color = isLightSquare ? 'rgba(0, 0, 0, 0.6)' : 'rgba(255, 255, 255, 0.6)';
         square.appendChild(fileLabel);
       }
 
@@ -99,8 +102,7 @@ function handleDrop(e) {
     e.target.addEventListener('dragstart', handleDragStart);
     e.target.addEventListener('dragend', handleDragEnd);
 
-    // To keep labels on target square intact:
-    // But here dragging overwrites textContent; this basic demo can be improved later
+    // Note: This simple method overwrites coordinate labels on drop; can be improved later.
   }
 }
 
