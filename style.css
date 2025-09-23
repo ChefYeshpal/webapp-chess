@@ -1,3 +1,33 @@
+body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20px;
+    font-family:'Courier New', Courier, monospace;
+}
+
+#board-container {
+    display: flex;
+    align-items: center;
+}
+
+#ranks-column {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 512px; /* to keep the same height as board */
+    margin-right: 4px;
+    font-weight: bold;
+    font-size: 14px;
+    user-select: none;
+}
+
+#board-and-files {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
 #chessboard {
     display: grid;
     grid-template-columns: repeat(8, 64px);
@@ -5,6 +35,7 @@
     gap: 0;
     width: 512px;
     height: 512px;
+    border: 2px solid black
 }
 
 .square {
