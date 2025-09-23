@@ -14,6 +14,7 @@ The entire point of this project is to help me in making more interactive websit
     - Should also add a feature to be able to export that, maybe will help in further analysis of the game
 - Make the background dark, can't flash bang the cave dwellers...
 - Add icons for the pieces
+- Make the gameplay a bit more fluid, I dunno how to do that but there must be a way no?
 
 ## Devlogs:
 - 23 Sept 2025
