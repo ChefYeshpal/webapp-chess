@@ -1,58 +1,62 @@
 body {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-top: 20px;
-    font-family:'Courier New', Courier, monospace;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 20px;
+  font-family: Arial, sans-serif;
 }
 
 #board-container {
-    display: flex;
-    align-items: center;
-}
-
-#ranks-column {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    height: 512px; /* to keep the same height as board */
-    margin-right: 4px;
-    font-weight: bold;
-    font-size: 14px;
-    user-select: none;
-}
-
-#board-and-files {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+  display: flex;
+  justify-content: center;
 }
 
 #chessboard {
-    display: grid;
-    grid-template-columns: repeat(8, 64px);
-    grid-template-rows: repeat(8, 64px);
-    gap: 0;
-    width: 512px;
-    height: 512px;
-    border: 2px solid black
+  display: grid;
+  grid-template-columns: repeat(8, 64px);
+  grid-template-rows: repeat(8, 64px);
+  gap: 0;
+  width: 512px;
+  height: 512px;
+  border: 2px solid black;
+  position: relative;
 }
 
 .square {
-    width: 64px;
-    height: 64px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-weight: bold;
-    font-size: 14px;
-    user-select: none;
+  position: relative;
+  width: 64px;
+  height: 64px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+  font-size: 14px;
+  user-select: none;
 }
 
 .light {
-    background-color: #f0d9b5;
+  background-color: #f0d9b5;
 }
 
 .dark {
-    background-color: #b58863;
+  background-color: #b58863;
+}
+
+/* Coordinate markings inside edge squares */
+.rank-label, .file-label {
+  position: absolute;
+  color: rgba(255, 255, 255, 0.6);
+  font-weight: normal;
+  font-size: 12px;
+  user-select: none;
+}
+
+.rank-label {
+  top: 4px;
+  left: 4px;
+}
+
+.file-label {
+  bottom: 4px;
+  right: 4px;
 }
