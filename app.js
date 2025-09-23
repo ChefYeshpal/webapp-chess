@@ -55,6 +55,7 @@ function createBoard() {
         if (pieceName) {
           // To avoid overlap with labels, create piece text in a child span
           const pieceSpan = document.createElement('span');
+          pieceSpan.classList.add('piece');
           pieceSpan.textContent = pieceName;
           square.appendChild(pieceSpan);
 
@@ -72,11 +73,25 @@ function createBoard() {
   }
 }
 
-// Drag & drop handlers unchanged
+// Drag & drop handlers
 function handleDragStart(e) {
+  const pieceElement = e.target.querySelector('.piece');
+  if (!pieceElement) return;
+  
+  const pieceText = pieceElement.textContent;
+  const isWhitePiece = pieceText.startsWith('w');
+  const isBlackPiece = pieceText.startsWith('b');
+  
+  // Check if it's the correct player's turn
+  if ((currentTurn === 'white' && !isWhitePiece) || (currentTurn === 'black' && !isBlackPiece)) {
+    e.preventDefault();
+    return;
+  }
+  
   dragSrcEl = e.target;
+  draggedPieceText = pieceText;
   e.dataTransfer.effectAllowed = 'move';
-  e.dataTransfer.setData('text/plain', e.target.textContent);
+  e.dataTransfer.setData('text/plain', pieceText);
   e.target.style.opacity = '0.5';
 }
 
@@ -92,20 +107,64 @@ function handleDragOver(e) {
 function handleDrop(e) {
   e.preventDefault();
   if (dragSrcEl !== e.target && e.target.classList.contains('square')) {
-    // Clear previous piece
-    dragSrcEl.textContent = '';
+    // Get the target square element
+    let targetSquare = e.target;
+    
+    // If dropped on a piece, get the parent square
+    if (e.target.classList.contains('piece')) {
+      targetSquare = e.target.parentElement;
+    }
+    
+    // Check if target square already has a piece
+    const existingPiece = targetSquare.querySelector('.piece');
+    if (existingPiece) {
+      // Remove the captured piece
+      existingPiece.remove();
+    }
+    
+    // Remove piece from source square
+    const sourcePiece = dragSrcEl.querySelector('.piece');
+    if (sourcePiece) {
+      sourcePiece.remove();
+    }
+    
+    // Remove draggable from source
     dragSrcEl.draggable = false;
     dragSrcEl.removeEventListener('dragstart', handleDragStart);
     dragSrcEl.removeEventListener('dragend', handleDragEnd);
-
-    // Add piece to target
-    e.target.textContent = dragSrcEl.textContent;
-    e.target.draggable = true;
-    e.target.addEventListener('dragstart', handleDragStart);
-    e.target.addEventListener('dragend', handleDragEnd);
-
-    // Note: This simple method overwrites coordinate labels on drop; can be improved later.
+    
+    // Add piece to target square
+    const newPieceSpan = document.createElement('span');
+    newPieceSpan.classList.add('piece');
+    newPieceSpan.textContent = draggedPieceText;
+    targetSquare.appendChild(newPieceSpan);
+    
+    // Make target square draggable
+    targetSquare.draggable = true;
+    targetSquare.addEventListener('dragstart', handleDragStart);
+    targetSquare.addEventListener('dragend', handleDragEnd);
+    
+    // Switch turns
+    currentTurn = currentTurn === 'white' ? 'black' : 'white';
+    updateTurnIndicator();
   }
 }
 
-document.addEventListener('DOMContentLoaded', createBoard);
+function updateTurnIndicator() {
+  let indicator = document.getElementById('turn-indicator');
+  if (!indicator) {
+    indicator = document.createElement('div');
+    indicator.id = 'turn-indicator';
+    indicator.style.marginTop = '20px';
+    indicator.style.fontSize = '18px';
+    indicator.style.fontWeight = 'bold';
+    document.body.appendChild(indicator);
+  }
+  indicator.textContent = `Current turn: ${currentTurn === 'white' ? 'White' : 'Black'}`;
+  indicator.style.color = currentTurn === 'white' ? '#333' : '#666';
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  createBoard();
+  updateTurnIndicator();
+});
