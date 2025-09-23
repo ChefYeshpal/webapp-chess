@@ -34,6 +34,11 @@ body {
   user-select: none;
 }
 
+.piece {
+  z-index: 10;
+  pointer-events: none; /* Allow clicks to pass through to the square */
+}
+
 .light {
   background-color: #f0d9b5;
 }
@@ -59,4 +64,15 @@ body {
 .file-label {
   bottom: 4px;
   right: 4px;
+}
+
+#turn-indicator {
+  margin-top: 20px;
+  font-size: 18px;
+  font-weight: bold;
+  padding: 10px 20px;
+  border-radius: 5px;
+  background-color: #f0f0f0;
+  border: 2px solid #ccc;
+  text-align: center;
 }
