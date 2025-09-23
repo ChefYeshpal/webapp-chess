@@ -1,9 +1,10 @@
 const boardElement = document.getElementById('chessboard');
+const ranksColumn = document.getElementById('ranks-column');
+const filesRow = document.getElementById('files-row');
 
 const files = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];
 const ranks = [8, 7, 6, 5, 4, 3, 2, 1];
 
-// Starting position pieces by rank (white at bottom, black at top)
 const pieceSetup = {
   1: ['wRook', 'wKnight', 'wBishop', 'wQueen', 'wKing', 'wBishop', 'wKnight', 'wRook'],
   2: ['wPawn','wPawn','wPawn','wPawn','wPawn','wPawn','wPawn','wPawn'],
@@ -11,19 +12,38 @@ const pieceSetup = {
   8: ['bRook', 'bKnight', 'bBishop', 'bQueen', 'bKing', 'bBishop', 'bKnight', 'bRook']
 };
 
-// Track dragged piece information
 let dragSrcEl = null;
 
-// Create board squares and pieces
+function createCoordinates() {
+  ranksColumn.innerHTML = '';
+  filesRow.innerHTML = '';
+
+  for (let i = 0; i < 8; i++) {
+    const rankLabel = document.createElement('div');
+    rankLabel.textContent = ranks[i];
+    rankLabel.style.height = '64px';
+    rankLabel.style.lineHeight = '64px';
+    rankLabel.style.textAlign = 'center';
+    ranksColumn.appendChild(rankLabel);
+  }
+
+  for (let f of files) {
+    const fileLabel = document.createElement('div');
+    fileLabel.textContent = f;
+    fileLabel.style.width = '64px';
+    fileLabel.style.textAlign = 'center';
+    filesRow.appendChild(fileLabel);
+  }
+}
+
 function createBoard() {
-  boardElement.innerHTML = ''; // Clear previous
+  boardElement.innerHTML = '';
 
   for (let rank of ranks) {
     for (let fileIdx = 0; fileIdx < 8; fileIdx++) {
       const square = document.createElement('div');
       square.classList.add('square');
 
-      // Color squares alternately
       if ((ranks.indexOf(rank) + fileIdx) % 2 === 0) {
         square.classList.add('light');
       } else {
@@ -32,20 +52,17 @@ function createBoard() {
 
       square.dataset.square = files[fileIdx] + rank;
 
-      // Add piece text if present
       const piecesOnRank = pieceSetup[rank];
       if (piecesOnRank) {
         const pieceName = piecesOnRank[fileIdx];
         if (pieceName) {
           square.textContent = pieceName;
           square.draggable = true;
-          // Add drag event listeners
           square.addEventListener('dragstart', handleDragStart);
           square.addEventListener('dragend', handleDragEnd);
         }
       }
 
-      // Add drag over and drop event listeners for movement
       square.addEventListener('dragover', handleDragOver);
       square.addEventListener('drop', handleDrop);
 
@@ -54,12 +71,10 @@ function createBoard() {
   }
 }
 
-// Drag & drop handlers
 function handleDragStart(e) {
   dragSrcEl = e.target;
   e.dataTransfer.effectAllowed = 'move';
   e.dataTransfer.setData('text/plain', e.target.textContent);
-  // Optional: visually highlight dragged piece
   e.target.style.opacity = '0.5';
 }
 
@@ -75,13 +90,11 @@ function handleDragOver(e) {
 function handleDrop(e) {
   e.preventDefault();
   if (dragSrcEl !== e.target && e.target.classList.contains('square')) {
-    // Move piece visually
     e.target.textContent = dragSrcEl.textContent;
     dragSrcEl.textContent = '';
-    dragSrcEl.draggable = false; // Clear previous draggable square
-    e.target.draggable = true;    // New square with piece is draggable
+    dragSrcEl.draggable = false;
+    e.target.draggable = true;
 
-    // Remove old listeners, add to new square
     dragSrcEl.removeEventListener('dragstart', handleDragStart);
     dragSrcEl.removeEventListener('dragend', handleDragEnd);
     e.target.addEventListener('dragstart', handleDragStart);
@@ -89,5 +102,7 @@ function handleDrop(e) {
   }
 }
 
-// Initialize the board when page loads
-document.addEventListener('DOMContentLoaded', createBoard);
+document.addEventListener('DOMContentLoaded', () => {
+  createCoordinates();
+  createBoard();
+});
