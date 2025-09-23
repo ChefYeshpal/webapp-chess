@@ -11,6 +11,8 @@ const pieceSetup = {
 };
 
 let dragSrcEl = null;
+let currentTurn = 'white'; // Track whose turn it is
+let draggedPieceText = ''; // Store the piece text during drag
 
 function createBoard() {
   boardElement.innerHTML = '';
