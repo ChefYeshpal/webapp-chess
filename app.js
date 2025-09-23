@@ -518,17 +518,11 @@ function handleDrop(e) {
 }
 
 function updateTurnIndicator() {
-  let indicator = document.getElementById('turn-indicator');
-  if (!indicator) {
-    indicator = document.createElement('div');
-    indicator.id = 'turn-indicator';
-    indicator.style.marginTop = '20px';
-    indicator.style.fontSize = '18px';
-    indicator.style.fontWeight = 'bold';
-    document.body.appendChild(indicator);
+  const indicator = document.getElementById('turn-indicator');
+  if (indicator) {
+    indicator.textContent = `Current turn: ${currentTurn === 'white' ? 'White' : 'Black'}`;
+    indicator.style.color = currentTurn === 'white' ? '#2c3e50' : '#34495e';
   }
-  indicator.textContent = `Current turn: ${currentTurn === 'white' ? 'White' : 'Black'}`;
-  indicator.style.color = currentTurn === 'white' ? '#333' : '#666';
 }
 
 document.addEventListener('DOMContentLoaded', function() {

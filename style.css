@@ -6,6 +6,14 @@ body {
   font-family: Arial, sans-serif;
 }
 
+#game-wrapper {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  max-width: 1200px;
+}
+
 #board-container {
   display: flex;
   justify-content: center;
@@ -116,12 +124,17 @@ body {
 }
 
 #turn-indicator {
-  margin-top: 20px;
+  position: absolute;
+  right: 0;
+  top: 0;
   font-size: 18px;
   font-weight: bold;
-  padding: 10px 20px;
-  border-radius: 5px;
-  background-color: #f0f0f0;
-  border: 2px solid #ccc;
+  padding: 15px 20px;
+  border-radius: 8px;
+  background-color: #f8f8f8;
+  border: 2px solid #ddd;
   text-align: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  min-width: 180px;
+  white-space: nowrap;
 }
