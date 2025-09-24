@@ -22,6 +22,8 @@ const pieceMap = {
     'k': 'King'
 };
 
+const promotionPieces = ['q', 'r', 'b', 'n']; // Queen, Rook, Bishop, Knight
+
 
 
 function showPromotionDialog(from, to) {
