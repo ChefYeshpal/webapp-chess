@@ -6,9 +6,21 @@
     <link rel=stylesheet href="style.css" />
 </html>
 <body>
-    <h1>Chess with yourself :')</h1>
+    <div id="intro-overlay">
+        <div id="intro-content">
+            <h1>WELCOME LONELY TRAVELLER!</h1>
+            <p>I see you are trying to check this little thing out... well, it's nothing much, other than <span class="stylized-chess">CHESS</span></p>
+            <p>But, before anything, which side would you play as?</p>
+            <div id="player-selection">
+                <button id="play-white">White</button>
+                <button id="play-black">Black</button>
+            </div>
+        </div>
+    </div>
+
+    <h1 class="hidden">Chess with yourself :')</h1>
     
-    <div id="game-wrapper">
+    <div id="game-wrapper" class="hidden">
         <div id="board-container">
             <div id="chessboard"></div>
         </div>
@@ -16,5 +28,6 @@
     </div>
 
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/chess.js/0.10.3/chess.min.js"></script>
     <script src="app.js"></script>
 </body>
