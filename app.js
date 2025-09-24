@@ -1,3 +1,7 @@
+// Create a Stockfish engine instance (USES Web Worker API)
+const stockfish = new Worker('https://cdn.jsdelivr.net/npm/stockfish@16.1.0/dist/stockfish.min.js');
+
+
 // Using chess.js for game logic
 const boardElement = document.getElementById('chessboard');
 const files = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];
