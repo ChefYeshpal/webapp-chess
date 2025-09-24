@@ -33,15 +33,18 @@ function showPromotionDialog(from, to) {
     const choicesContainer = document.getElementById('promotion-choices');
     choicesContainer.innerHTML = '';
 
-    const promotionPieces = ['q', 'r', 'b', 'n'];
-    const pieceSymbols = { 'q': '♛', 'r': '♜', 'b': '♝', 'n': '♞' };
     const turn = chess.turn();
 
     promotionPieces.forEach(p => {
         const button = document.createElement('div');
         button.classList.add('promotion-piece');
-        button.textContent = pieceSymbols[p];
-        button.style.color = turn === 'w' ? '#eee' : '#222';
+        
+        const pieceImg = document.createElement('img');
+        pieceImg.src = `images/${turn}${pieceMap[p].toLowerCase()}.png`;
+        pieceImg.alt = pieceMap[p];
+        
+        button.appendChild(pieceImg);
+
         button.addEventListener('click', () => {
             movePiece(from, to, p);
             overlay.classList.add('hidden');
@@ -106,11 +109,12 @@ function updateBoard() {
                 const squareName = files[fileIdx] + (8 - rankIdx);
                 const squareElement = document.querySelector(`[data-square="${squareName}"]`);
                 
-                const pieceSpan = document.createElement('span');
-                pieceSpan.classList.add('piece');
-                pieceSpan.textContent = `${piece.color}${pieceMap[piece.type]}`; // e.g., wPawn
+                const pieceImg = document.createElement('img');
+                pieceImg.classList.add('piece');
+                pieceImg.src = `images/${piece.color}${pieceMap[piece.type].toLowerCase()}.png`;
+                pieceImg.alt = `${piece.color}${pieceMap[piece.type]}`;
                 
-                squareElement.appendChild(pieceSpan);
+                squareElement.appendChild(pieceImg);
                 squareElement.draggable = true;
                 squareElement.addEventListener('dragstart', handleDragStart);
                 squareElement.addEventListener('dragend', handleDragEnd);
