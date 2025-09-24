@@ -194,6 +194,12 @@ function movePiece(from, to, promotion) {
         setTimeout(() => {
             alert(getGameOverText());
         }, 200);
+        return;
+    }
+
+    // If it is now computers turn, ask Stockfish to play
+    if (chess.turn() === computerColor) {
+      setTimeout(makeStockfishMove, 300); // Slight delay for realism
     }
 }
 
@@ -338,7 +344,6 @@ function makeStockfishMove() {
         });
     }
 }
-
 
 document.addEventListener('DOMContentLoaded', function() {
     const introOverlay = document.getElementById('intro-overlay');
