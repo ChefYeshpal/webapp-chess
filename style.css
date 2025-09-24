@@ -23,8 +23,9 @@ h1 {
   color: #f0d9b5;
   font-family: 'Courier New', Courier, monospace;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-  margin: 0 0 15px 0;
-  font-size: 1.5em;
+  margin: 0 0 20px 0;
+  font-size: 2.2em;
+  font-weight: bold;
 }
 
 #game-wrapper {
@@ -49,11 +50,11 @@ h1 {
 
 #chessboard {
   display: grid;
-  grid-template-columns: repeat(8, 56px);
-  grid-template-rows: repeat(8, 56px);
+  grid-template-columns: repeat(8, 65px);
+  grid-template-rows: repeat(8, 65px);
   gap: 0;
-  width: 448px;
-  height: 448px;
+  width: 520px;
+  height: 520px;
   border: 3px solid #444;
   border-radius: 8px;
   position: relative;
@@ -63,13 +64,13 @@ h1 {
 
 .square {
   position: relative;
-  width: 56px;
-  height: 56px;
+  width: 65px;
+  height: 65px;
   display: flex;
   justify-content: center;
   align-items: center;
   font-weight: bold;
-  font-size: 12px;
+  font-size: 14px;
   user-select: none;
   box-sizing: border-box;
 }
@@ -92,8 +93,8 @@ h1 {
 }
 
 .piece {
-  width: 48px;
-  height: 48px;
+  width: 58px;
+  height: 58px;
   z-index: 10;
   pointer-events: none; /* Allow clicks to pass through to the square */
   image-rendering: pixelated;
@@ -177,11 +178,11 @@ h1 {
 
 #turn-indicator {
   position: absolute;
-  right: 0;
+  right: -30px;
   top: 0;
   font-size: 18px;
   font-weight: bold;
-  padding: 15px 20px;
+  padding: 12px 18px;
   border-radius: 8px;
   background-color: rgba(26, 26, 26, 0.9);
   border: 2px solid #444;
@@ -189,7 +190,7 @@ h1 {
   text-align: center;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
   backdrop-filter: blur(10px);
-  min-width: 180px;
+  min-width: 160px;
   white-space: nowrap;
 }
 
@@ -317,8 +318,8 @@ h1 {
 /* AI Toggle Styles */
 #ai-toggle-container {
     position: fixed;
-    bottom: 20px;
-    right: 20px;
+    bottom: 15px;
+    right: 15px;
     z-index: 1000;
 }
 
