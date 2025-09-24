@@ -320,6 +320,26 @@ function getGameOverText() {
     return '';
 }
 
+
+// Function to make stockfish play a move
+function makeStockfishMove() {
+    if (chess.game_over()) return;
+
+    if (chess.turn() === computerColor) {
+        fetchStockfishMove(chess.fen(), function(move) {
+            if (!move || move.length < 4) return;
+            const from = move.substr(0, 2);
+            const to = move.substr(2, 2);
+            let promotion = null;
+            if (move.length > 4) {
+                promotion = move[4]; // e.g. 'q' for queen promotion
+            }
+            movePiece(from, to, promotion);
+        });
+    }
+}
+
+
 document.addEventListener('DOMContentLoaded', function() {
     const introOverlay = document.getElementById('intro-overlay');
     const gameWrapper = document.getElementById('game-wrapper');
@@ -335,6 +355,11 @@ document.addEventListener('DOMContentLoaded', function() {
         gameWrapper.classList.remove('hidden');
         if(mainTitle) mainTitle.classList.remove('hidden');
         createBoard();
+
+        // If computer plays white, let stockfish start
+        if (computerColor === 'w') {
+          makeStockfishMove();
+        }
     }
 
     whiteButton.addEventListener('click', () => startGame('white'));
