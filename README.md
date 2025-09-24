@@ -5,17 +5,11 @@ Built for **siege week 4** (practice) on hackclub. All it does is allow you to p
 The entire point of this project is to help me in making more interactive websites and give me some experience in how to integrate opensource stuff in them.
 
 ## Stuff I wanna add:
-- Check and Checkmate systems for the king via various moves
-- Stockfish
-- An intro screen where one can pick wether they wanna play as black or white
 - Toggles for:
     - Using keyboard keystrokes to move the pieces/using mouse to move the pieces
 - View of previous moves and such on the side bar with the proper notation
     - Should also add a feature to be able to export that, maybe will help in further analysis of the game
-- Make the background dark, can't flash bang the cave dwellers...
-- Add icons for the pieces
 - Make the gameplay a bit more fluid, I dunno how to do that but there must be a way no?
-- Add a way to maybe flip the board? will need to see how I can do that tbh...
 
 ## Devlogs:
 - 23 Sept 2025
@@ -31,4 +25,16 @@ The entire point of this project is to help me in making more interactive websit
         - ```<script src="https://cdnjs.cloudflare.com/ajax/libs/chess.js/0.10.3/chess.min.js"></script>```
     - Added an intro screen, and choice picker as to what they'd wanna play as
     - Added promotion screen, so that if the pawn reaches the farthest rank then it can be promoted to either: Queen, Rook, Knight, or Bishop
-    - Still gotta figure out as to how I can integrate stockfish into this... I do know there's a need for a seperate js library but I'll have to look it up.
+    - Integrated stockfish functionality
+        - Enountered CORS (Cross-Origin Resource Sharing) error when tried to load stockfish as a webworker, apparently browsers block this when running stuff locally...
+        - Added a custom chess engine worker ```stockfish-worker.js``` 
+            - it runs in a seperate thread and doesn't block any UI
+            Impliments basic UCI (Universal Chess Interface) commands
+            - Uses chess.js (the external library) to generate ONLY legal moves
+        - Main engine interface file: ```stockfish.js```
+            - Creates & manages the chessworker
+            - Handles the UCI
+            - Provides the move requests
+        - FEN integration makes it work with any board position
+        - Engine also automatically retries to start if "engine not ready" error comes
+        - Also added ai toggle, so can only use stockfish for a few moves if wanting to.
