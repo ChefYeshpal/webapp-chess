@@ -1,35 +1,54 @@
-// Create a stockfish engine as a webworker
-const stockfish = new Worker('stockfish.min.js');
+// Create a chess engine as a webworker
+const stockfish = new Worker('./stockfish-worker.js');
 
 // Flag to track if stockfish is ready
 let stockfishReady = false;
 
 // Listen for stockfish messages
 stockfish.onmessage = function(event) {
-    if (event.data === 'uciok') {
+    const line = event.data;
+    console.log('Engine says:', line);
+    
+    if (line === 'uciok') {
         stockfishReady = true;
+        console.log('Chess engine is ready!');
     }
+};
+
+// Handle worker errors
+stockfish.onerror = function(error) {
+    console.error('Chess engine worker error:', error);
 };
 
 // Send initial UCI command to start the engine
 stockfish.postMessage('uci');
 
-// Function to get stockfish best move for a given FEN position
+// Function to get chess engine best move for a given FEN position
 function fetchStockfishMove(fen, callback) {
     if (!stockfishReady) {
-        console.warn("Stockfish is not ready yet!")
+        console.warn("Chess engine is not ready yet!");
+        // Wait a bit and try again
+        setTimeout(() => fetchStockfishMove(fen, callback), 100);
         return;
     }
+    
+    console.log('Requesting move for position:', fen);
     stockfish.postMessage('position fen ' + fen);
-    // Can adjust depth for a slower/faster engine
-    stockfish.postMessage('go depth 15'); 
+    stockfish.postMessage('go depth 5'); 
 
-    stockfish.onmessage = function(event) {
+    // Set up a temporary message handler for this move request
+    const handleMoveResponse = function(event) {
         const line = event.data;
-        // Listen for best move response
+        console.log('Engine response:', line);
+        
         if (line.startsWith('bestmove')) {
             const move = line.split(' ')[1];
+            console.log('Engine suggests move:', move);
+            // Remove this handler and restore the original
+            stockfish.removeEventListener('message', handleMoveResponse);
             callback(move);
         }
     };
+    
+    stockfish.addEventListener('message', handleMoveResponse);
 }
