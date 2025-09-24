@@ -22,14 +22,7 @@ const pieceMap = {
     'k': 'King'
 };
 
-function isPromotion(from, to) {
-    const piece = chess.get(from);
-    if (!piece || piece.type !== 'p') return false;
-    const toRank = to.charAt(1);
-    if (piece.color === 'w' && toRank === '8') return true;
-    if (piece.color === 'b' && toRank === '1') return true;
-    return false;
-}
+
 
 function showPromotionDialog(from, to) {
     const overlay = document.getElementById('promotion-overlay');
@@ -171,7 +164,24 @@ function handleSquareClick(e) {
 }
 
 function attemptMove(from, to) {
-    if (isPromotion(from, to)) {
+    // First check if this would be a legal move by testing with a temporary promotion piece
+    const piece = chess.get(from);
+    let isPromotionMove = false;
+    
+    if (piece && piece.type === 'p') {
+        const toRank = to.charAt(1);
+        if ((piece.color === 'w' && toRank === '8') || (piece.color === 'b' && toRank === '1')) {
+            // This is a potential promotion move, test if it's legal with a queen promotion
+            const testMove = chess.move({ from, to, promotion: 'q' });
+            if (testMove) {
+                // It's a legal promotion move, undo it and show promotion dialog
+                chess.undo();
+                isPromotionMove = true;
+            }
+        }
+    }
+    
+    if (isPromotionMove) {
         showPromotionDialog(from, to);
     } else {
         movePiece(from, to);
