@@ -28,7 +28,7 @@ The entire point of this project is to help me in making more interactive websit
     - Added system for legal moves and showcase it
 - 24 Sept 2025
     - Removed all that BS for legal moves, used an external library "chess.js" instead for that cause I aint too good abt it bruh...
-        - <script src="https://cdnjs.cloudflare.com/ajax/libs/chess.js/0.10.3/chess.min.js"></script>
+        - ```<script src="https://cdnjs.cloudflare.com/ajax/libs/chess.js/0.10.3/chess.min.js"></script>```
     - Added an intro screen, and choice picker as to what they'd wanna play as
     - Added promotion screen, so that if the pawn reaches the farthest rank then it can be promoted to either: Queen, Rook, Knight, or Bishop
     - Still gotta figure out as to how I can integrate stockfish into this... I do know there's a need for a seperate js library but I'll have to look it up.
