@@ -1,6 +1,7 @@
 // Using chess.js for game logic
 
 let computerColor = null;
+let aiEnabled = true; // Track if AI opponent is enabled
 const boardElement = document.getElementById('chessboard');
 const files = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];
 const ranks = [8, 7, 6, 5, 4, 3, 2, 1];
@@ -197,8 +198,8 @@ function movePiece(from, to, promotion) {
         return;
     }
 
-    // If it is now computers turn, ask Stockfish to play
-    if (chess.turn() === computerColor) {
+    // If it is now computers turn and AI is enabled, ask engine to play
+    if (aiEnabled && chess.turn() === computerColor) {
       setTimeout(makeStockfishMove, 300); // Slight delay for realism
     }
 }
@@ -361,8 +362,8 @@ document.addEventListener('DOMContentLoaded', function() {
         if(mainTitle) mainTitle.classList.remove('hidden');
         createBoard();
 
-        // If computer plays white, let stockfish start
-        if (computerColor === 'w') {
+        // If computer plays white and AI is enabled, let engine start
+        if (aiEnabled && computerColor === 'w') {
           makeStockfishMove();
         }
     }
@@ -370,6 +371,18 @@ document.addEventListener('DOMContentLoaded', function() {
     whiteButton.addEventListener('click', () => startGame('white'));
     blackButton.addEventListener('click', () => startGame('black'));
     
+    // Handle AI toggle
+    const aiToggle = document.getElementById('ai-enabled');
+    aiToggle.addEventListener('change', function() {
+        aiEnabled = this.checked;
+        console.log('AI opponent:', aiEnabled ? 'enabled' : 'disabled');
+        
+        // If AI was just enabled and it's the computer's turn, make a move
+        if (aiEnabled && chess.turn() === computerColor && !chess.game_over()) {
+            setTimeout(makeStockfishMove, 500);
+        }
+    });
+
     document.addEventListener('click', function(e) {
         if (!e.target.closest('#chessboard')) {
             clearSelectionAndIndicators();
