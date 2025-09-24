@@ -297,8 +297,8 @@ h1 {
 }
 
 .promotion-piece {
-    width: 64px;
-    height: 64px;
+    width: 80px;
+    height: 80px;
     background-color: #777;
     border: 2px solid #999;
     border-radius: 5px;
@@ -313,6 +313,12 @@ h1 {
 
 .promotion-piece:hover {
     background-color: #999;
+}
+
+.promotion-piece img {
+    width: 70px;
+    height: 70px;
+    image-rendering: pixelated;
 }
 
 /* AI Toggle Styles */
