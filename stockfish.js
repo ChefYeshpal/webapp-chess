@@ -1,5 +1,5 @@
 // Create a stockfish engine as a webworker
-const stockfish = new Worker('https://cdn.jsdelivr.net/npm/stockfish@16.1.0/dist/stockfish.min.js');
+const stockfish = new Worker('stockfish.min.js');
 
 // Flag to track if stockfish is ready
 let stockfishReady = false;
