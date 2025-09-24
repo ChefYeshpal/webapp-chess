@@ -1,4 +1,6 @@
 // Using chess.js for game logic
+
+let computerColor = null;
 const boardElement = document.getElementById('chessboard');
 const files = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];
 const ranks = [8, 7, 6, 5, 4, 3, 2, 1];
@@ -327,6 +329,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function startGame(orientation) {
         playerOrientation = orientation;
+        // So computer plays the opposite side
+        computerColor = orientation === 'white' ? 'b' : 'w';
         introOverlay.classList.add('hidden');
         gameWrapper.classList.remove('hidden');
         if(mainTitle) mainTitle.classList.remove('hidden');
@@ -342,3 +346,5 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 });
+
+
