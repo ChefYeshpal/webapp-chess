@@ -26,3 +26,5 @@ The entire point of this project is to help me in making more interactive websit
     - Added square number/alphabets to the board
         - Will alternate in colours, depending on which colour square they are on
     - Added system for legal moves and showcase it
+- 24 Sept 2025
+    - Removed all that BS for legal moves, used an external library "chess.js" instead for that cause I aint too good abt it bruh...
