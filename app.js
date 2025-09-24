@@ -136,7 +136,7 @@ function handleSquareClick(e) {
 
     // If a piece is already selected
     if (selectedSquare) {
-        // If clicking a legal move, make the move
+        // If clicking a legal move, make the move, otherwise do nothing
         if (clickedSquareEl.classList.contains('legal-move')) {
             attemptMove(selectedSquare, clickedSquare);
             return;
