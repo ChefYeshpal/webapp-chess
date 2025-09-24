@@ -19,6 +19,39 @@ const pieceMap = {
     'k': 'King'
 };
 
+function isPromotion(from, to) {
+    const piece = chess.get(from);
+    if (!piece || piece.type !== 'p') return false;
+    const toRank = to.charAt(1);
+    if (piece.color === 'w' && toRank === '8') return true;
+    if (piece.color === 'b' && toRank === '1') return true;
+    return false;
+}
+
+function showPromotionDialog(from, to) {
+    const overlay = document.getElementById('promotion-overlay');
+    const choicesContainer = document.getElementById('promotion-choices');
+    choicesContainer.innerHTML = '';
+
+    const promotionPieces = ['q', 'r', 'b', 'n'];
+    const pieceSymbols = { 'q': '♛', 'r': '♜', 'b': '♝', 'n': '♞' };
+    const turn = chess.turn();
+
+    promotionPieces.forEach(p => {
+        const button = document.createElement('div');
+        button.classList.add('promotion-piece');
+        button.textContent = pieceSymbols[p];
+        button.style.color = turn === 'w' ? '#eee' : '#222';
+        button.addEventListener('click', () => {
+            movePiece(from, to, p);
+            overlay.classList.add('hidden');
+        });
+        choicesContainer.appendChild(button);
+    });
+
+    overlay.classList.remove('hidden');
+}
+
 function createBoard() {
     boardElement.innerHTML = '';
     const boardRanks = playerOrientation === 'white' ? [...ranks] : [...ranks].reverse();
@@ -105,7 +138,7 @@ function handleSquareClick(e) {
     if (selectedSquare) {
         // If clicking a legal move, make the move
         if (clickedSquareEl.classList.contains('legal-move')) {
-            movePiece(selectedSquare, clickedSquare);
+            attemptMove(selectedSquare, clickedSquare);
             return;
         }
         
@@ -130,8 +163,16 @@ function handleSquareClick(e) {
     showLegalMoveIndicators(legalMoves);
 }
 
-function movePiece(from, to) {
-    const move = chess.move({ from, to });
+function attemptMove(from, to) {
+    if (isPromotion(from, to)) {
+        showPromotionDialog(from, to);
+    } else {
+        movePiece(from, to);
+    }
+}
+
+function movePiece(from, to, promotion) {
+    const move = chess.move({ from, to, promotion });
 
     if (move === null) {
         // Illegal move
@@ -247,7 +288,7 @@ function handleDrop(e) {
     }
     
     const toSquare = toSquareEl.dataset.square;
-    movePiece(fromSquare, toSquare);
+    attemptMove(fromSquare, toSquare);
 }
 
 function updateTurnIndicator() {

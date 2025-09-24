@@ -206,3 +206,56 @@ body {
     background-color: #f0d9b5;
     color: #1a1a1a;
 }
+
+/* Promotion Overlay Styles */
+#promotion-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+}
+
+#promotion-content {
+    padding: 20px 30px;
+    background: #3a3a3a;
+    border-radius: 8px;
+    text-align: center;
+    color: white;
+    border: 2px solid #555;
+}
+
+#promotion-content h3 {
+    margin-top: 0;
+    margin-bottom: 20px;
+    font-family: Arial, sans-serif;
+}
+
+#promotion-choices {
+    display: flex;
+    gap: 15px;
+}
+
+.promotion-piece {
+    width: 64px;
+    height: 64px;
+    background-color: #777;
+    border: 2px solid #999;
+    border-radius: 5px;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 36px;
+    font-weight: bold;
+    transition: background-color 0.2s;
+}
+
+.promotion-piece:hover {
+    background-color: #999;
+}
