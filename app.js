@@ -79,7 +79,7 @@ function createBoard() {
 }
 
 // Legal move calculation functions
-function getLegalMoves(piece, fromSquare, isCheckValidation = false) {
+function getLegalMoves(piece, fromSquare) {
   const moves = [];
   const [fromFile, fromRank] = parseSquare(fromSquare);
   const pieceType = piece.substring(1); // Remove color prefix
@@ -87,135 +87,27 @@ function getLegalMoves(piece, fromSquare, isCheckValidation = false) {
   
   switch (pieceType) {
     case 'Pawn':
-      moves.push(...getPawnMoves(fromFile, fromRank, isWhite, isCheckValidation));
+      moves.push(...getPawnMoves(fromFile, fromRank, isWhite));
       break;
-// ... existing code ...
-function getPawnMoves(file, rank, isWhite, isCheckValidation = false) {
-  const moves = [];
-  const direction = isWhite ? 1 : -1;
-  const startRank = isWhite ? 1 : 6;
-  
-  // Forward moves (not relevant for check validation from opponent)
-  if (!isCheckValidation) {
-    const oneStep = squareToString(file, rank + direction);
-    if (isValidSquare(oneStep) && !getPieceAt(oneStep)) {
-      moves.push(oneStep);
-      
-      // Double move from start position
-      if (rank === startRank) {
-        const twoStep = squareToString(file, rank + 2 * direction);
-        if (isValidSquare(twoStep) && !getPieceAt(twoStep)) {
-          moves.push(twoStep);
-        }
-      }
-    }
+    case 'Rook':
+      moves.push(...getRookMoves(fromFile, fromRank));
+      break;
+    case 'Knight':
+      moves.push(...getKnightMoves(fromFile, fromRank));
+      break;
+    case 'Bishop':
+      moves.push(...getBishopMoves(fromFile, fromRank));
+      break;
+    case 'Queen':
+      moves.push(...getQueenMoves(fromFile, fromRank));
+      break;
+    case 'King':
+      moves.push(...getKingMoves(fromFile, fromRank));
+      break;
   }
-// ... existing code ...
-function handleSquareClick(e) {
-  e.stopPropagation();
-  const clickedSquare = e.currentTarget;
-  const pieceElement = clickedSquare.querySelector('.piece');
   
-  // If there's already a selected piece
-  if (selectedSquare) {
-    // Check if clicking on a legal move square
-    if (clickedSquare.classList.contains('legal-move')) {
-      // Move piece to clicked square
-      movePieceToSquare(selectedSquare, clickedSquare);
-      return;
-    }
-// ... existing code ...
-      if ((currentTurn === 'white' && isWhitePiece) || (currentTurn === 'black' && isBlackPiece)) {
-        // Clear previous selection and select new piece
-        clearLegalMoveIndicators();
-        clearSelection();
-        
-        selectedSquare = clickedSquare;
-        clickedSquare.classList.add('selected');
-        
-        const validMoves = getValidMoves(piece, clickedSquare.dataset.square);
-        showLegalMoveIndicators(validMoves);
-        return;
-      }
-    }
-    
-// ... existing code ...
-    if ((currentTurn === 'white' && isWhitePiece) || (currentTurn === 'black' && isBlackPiece)) {
-      selectedSquare = clickedSquare;
-      clickedSquare.classList.add('selected');
-      
-      const validMoves = getValidMoves(piece, clickedSquare.dataset.square);
-      showLegalMoveIndicators(validMoves);
-    }
-  }
+  return moves.filter(move => isValidSquare(move));
 }
-
-function showLegalMoveIndicators(moves) {
-// ... existing code ...
-function movePieceToSquare(fromSquare, toSquare) {
-  // Check if target square already has a piece
-  const existingPiece = toSquare.querySelector('.piece');
-  if (existingPiece) {
-    existingPiece.remove();
-// ... existing code ...
-    toSquare.addEventListener('dragstart', handleDragStart);
-    toSquare.addEventListener('dragend', handleDragEnd);
-    
-    // Switch turns
-    currentTurn = currentTurn === 'white' ? 'black' : 'white';
-    updateTurnIndicator();
-
-    // Check for check
-    if (isKingInCheck(currentTurn)) {
-        const kingSquare = findKing(currentTurn);
-        const kingSquareElement = document.querySelector(`[data-square="${kingSquare}"]`);
-        flashSquare(kingSquareElement);
-    }
-    
-    // Clear selection and indicators
-    clearLegalMoveIndicators();
-    clearSelection();
-  }
-}
-
-// Drag & drop handlers
-// ... existing code ...
-  dragSrcEl = e.target;
-  draggedPieceText = pieceText;
-  e.dataTransfer.effectAllowed = 'move';
-  e.dataTransfer.setData('text/plain', pieceText);
-  
-  // Only make the piece transparent, not the square
-  pieceElement.style.opacity = '0.5';
-  
-  // Show legal moves when dragging starts
-  clearLegalMoveIndicators();
-  clearSelection();
-  selectedSquare = e.target;
-  const validMoves = getValidMoves(pieceText, e.target.dataset.square);
-  showLegalMoveIndicators(validMoves);
-}
-
-function handleDragEnd(e) {
-// ... existing code ...
-    targetSquare.addEventListener('dragstart', handleDragStart);
-    targetSquare.addEventListener('dragend', handleDragEnd);
-    
-    // Switch turns
-    currentTurn = currentTurn === 'white' ? 'black' : 'white';
-    updateTurnIndicator();
-
-    // Check for check
-    if (isKingInCheck(currentTurn)) {
-        const kingSquare = findKing(currentTurn);
-        const kingSquareElement = document.querySelector(`[data-square="${kingSquare}"]`);
-        flashSquare(kingSquareElement);
-    }
-  }
-}
-
-function updateTurnIndicator() {
-// ... existing code ...
 
 function parseSquare(square) {
   const file = square.charCodeAt(0) - 97; // 'a' = 0, 'b' = 1, etc.
