@@ -1,7 +1,7 @@
 // Using chess.js for game logic
 
 let computerColor = null;
-let aiEnabled = true; // Track if AI opponent is enabled
+let aiEnabled = true; // Track if AI opponent is enabled, also sets default value for it to be enabled
 const boardElement = document.getElementById('chessboard');
 const files = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];
 const ranks = [8, 7, 6, 5, 4, 3, 2, 1];
@@ -22,7 +22,7 @@ const pieceMap = {
     'k': 'King'
 };
 
-const promotionPieces = ['q', 'r', 'b', 'n']; // Queen, Rook, Bishop, Knight
+const promotionPieces = ['q', 'r', 'b', 'n']; // Queen, Rook, Bishop, Knight being the pieces that pawn can be promoted to
 
 
 
