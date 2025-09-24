@@ -15,7 +15,7 @@ The entire point of this project is to help me in making more interactive websit
 - Make the background dark, can't flash bang the cave dwellers...
 - Add icons for the pieces
 - Make the gameplay a bit more fluid, I dunno how to do that but there must be a way no?
-
+- Add a way to maybe flip the board? will need to see how I can do that tbh...
 
 ## Devlogs:
 - 23 Sept 2025
