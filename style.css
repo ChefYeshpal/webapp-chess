@@ -4,6 +4,7 @@ body {
   align-items: center;
   margin-top: 20px;
   font-family: Arial, sans-serif;
+  background: #727272;
 }
 
 #game-wrapper {
@@ -43,8 +44,11 @@ body {
 }
 
 .piece {
+  width: 56px;
+  height: 56px;
   z-index: 10;
   pointer-events: none; /* Allow clicks to pass through to the square */
+  image-rendering: pixelated;
 }
 
 .square.selected {
@@ -97,7 +101,7 @@ body {
 }
 
 .light {
-  background-color: #f0d9b5;
+  background-color: #d3bfa5;
 }
 
 .dark {
