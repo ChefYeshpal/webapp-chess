@@ -191,12 +191,11 @@ h1 {
   border-radius: 8px;
   background-color: rgba(26, 26, 26, 0.9);
   border: 2px solid #444;
-  color: #f0d9b5;
+  color: #886969;
   text-align: center;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
   backdrop-filter: blur(10px);
   min-width: 160px;
-  white-space: nowrap;
 }
 
 .hidden {
