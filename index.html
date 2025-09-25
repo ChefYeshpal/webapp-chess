@@ -22,14 +22,16 @@
 
     <h1 class="hidden">Chess with yourself :')</h1>
     
-    <div id="game-wrapper" class="hidden">
-        <div id="move-history-panel">
-            <div id="move-history-header">
-                <h3>Move History</h3>
-                <button id="clear-history" title="Clear History">🗑️</button>
-            </div>
-            <div id="move-list"></div>
+    <!-- Move History Panel (positioned independently) -->
+    <div id="move-history-panel" class="hidden">
+        <div id="move-history-header">
+            <h3>Move History</h3>
+            <button id="clear-history" title="Clear History">🗑️</button>
         </div>
+        <div id="move-list"></div>
+    </div>
+    
+    <div id="game-wrapper" class="hidden">
         <div id="board-container">
             <div id="chessboard"></div>
         </div>
@@ -58,5 +60,6 @@
     <!-- Script's -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/chess.js/0.10.3/chess.min.js"></script>
     <script src="stockfish.js"></script>
+    <script src="move-history.js"></script>
     <script src="app.js"></script>
 </body>
