@@ -121,6 +121,7 @@ function updateBoard() {
     });
     updateTurnIndicator();
     updateCheckStatus(); // To check turn status
+    updateLastMoveIndicator(); // Show last move
 }
 
 function getLegalMoves(fromSquare) {
@@ -403,6 +404,33 @@ function updateCheckStatus() {
                 square.classList.remove('attacking-piece', 'attacking-piece-ending');
             }, 300); // Match the shrink animation duration
         });
+    }
+}
+
+function updateLastMoveIndicator() {
+    // Remove any existing last move indicators
+    document.querySelectorAll('.last-move-from, .last-move-to').forEach(square => {
+        square.classList.remove('last-move-from', 'last-move-to');
+    });
+    
+    // Get the last move from history
+    const history = chess.history({ verbose: true });
+    if (history.length > 0) {
+        const lastMove = history[history.length - 1];
+        
+        // Highlight the 'from' square
+        const fromSquare = document.querySelector(`[data-square="${lastMove.from}"]`);
+        if (fromSquare) {
+            fromSquare.classList.add('last-move-from');
+        }
+        
+        // Highlight the 'to' square
+        const toSquare = document.querySelector(`[data-square="${lastMove.to}"]`);
+        if (toSquare) {
+            toSquare.classList.add('last-move-to');
+        }
+        
+        console.log(`Last move: ${lastMove.piece} from ${lastMove.from} to ${lastMove.to}`);
     }
 }
 

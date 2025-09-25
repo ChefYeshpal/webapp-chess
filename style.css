@@ -623,6 +623,54 @@ h1 {
   }
 }
 
+/* Last move indicator styling */
+.square.last-move-from,
+.square.last-move-to {
+  position: relative;
+}
+
+.square.last-move-from::before,
+.square.last-move-to::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(255, 255, 0, 0.3);
+  border: 2px solid rgba(255, 255, 0, 0.6);
+  border-radius: 4px;
+  pointer-events: none;
+  z-index: 5;
+  animation: lastMoveGlow 0.5s ease-out;
+}
+
+.square.last-move-from::before {
+  background-color: rgba(255, 255, 0, 0.2);
+  border-color: rgba(255, 255, 0, 0.4);
+}
+
+.square.last-move-to::before {
+  background-color: rgba(255, 255, 0, 0.4);
+  border-color: rgba(255, 255, 0, 0.8);
+  box-shadow: 0 0 10px rgba(255, 255, 0, 0.3);
+}
+
+@keyframes lastMoveGlow {
+  0% {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.1);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
 /* Hide move history on small screens */
 @media (max-width: 1024px) {
   #move-history-panel {
