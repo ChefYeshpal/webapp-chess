@@ -11,7 +11,7 @@ The entire point of this project is to help me in making more interactive websit
     - Should also add a feature to be able to export that, maybe will help in further analysis of the game
 - Make the gameplay a bit more fluid, I dunno how to do that but there must be a way no?
 - Add a alert screen or something that basically gives a message if someone's using the app in mobile, that it's not optimised for mobile
-- Make it so that how the king get's gyrating thingsaround his square when he's in check, there should be such cubes too around the checker piece but in yellow
+- Make it so that how the king get's gyrating things around his square when he's in check, there should be such cubes too around the checker piece but in yellow
 
 ## Devlogs:
 - 23 Sept 2025
