@@ -350,9 +350,13 @@ function updateCheckStatus() {
     const currentCheckSquares = document.querySelectorAll('.king-in-check');
     const currentAttackingSquares = document.querySelectorAll('.attacking-piece');
     
+    console.log('updateCheckStatus called, in_check:', chess.in_check());
+    
     // If the player is in check, then highlight their king and the attacking piece(s)
     if (chess.in_check()) {
         const kingSquare = findKingSquare(chess.turn());
+        console.log('King in check at square:', kingSquare);
+        
         if (kingSquare) {
             const kingElement = document.querySelector(`[data-square="${kingSquare}"]`);
             if (kingElement && !kingElement.classList.contains('king-in-check')) {
@@ -365,16 +369,19 @@ function updateCheckStatus() {
             }
         }
 
+        // Remove any existing attacking indicators first
+        currentAttackingSquares.forEach(attackSquare => {
+            attackSquare.classList.remove('attacking-piece');
+        });
+
         // Find and highlight the attacking piece(s)
         const attackingSquares = findAttackingPieces(chess.turn());
+        console.log('Found attacking squares:', attackingSquares);
+        
         attackingSquares.forEach(square => {
             const squareElement = document.querySelector(`[data-square="${square}"]`);
-            if (squareElement && !squareElement.classList.contains('attacking-piece')) {
-                // Remove any existing attacking indicators first
-                currentAttackingSquares.forEach(attackSquare => {
-                    attackSquare.classList.remove('attacking-piece');
-                });
-                // Add attacking indicator to the new piece
+            console.log('Adding attacking-piece class to square:', square, squareElement);
+            if (squareElement) {
                 squareElement.classList.add('attacking-piece');
             }
         });
@@ -418,50 +425,76 @@ function findAttackingPieces(kingColor) {
     
     if (!kingSquare) return attackingSquares;
 
-    // Get the opposite color (the one giving check)
-    const oppositeColor = kingColor === 'w' ? 'b' : 'w';
-    
     console.log(`Finding pieces attacking ${kingColor} king at ${kingSquare}`);
     
-    // Use a different approach - check which squares attack the king square
-    // by testing if moves from those squares include the king square
-    const board = chess.board();
-    for (let rankIdx = 0; rankIdx < 8; rankIdx++) {
-        for (let fileIdx = 0; fileIdx < 8; fileIdx++) {
-            const piece = board[rankIdx][fileIdx];
-            if (piece && piece.color === oppositeColor) {
-                const pieceSquare = files[fileIdx] + (8 - rankIdx);
-                
-                // Check if this piece can attack the king square
-                if (canPieceAttackSquare(piece, pieceSquare, kingSquare)) {
-                    attackingSquares.push(pieceSquare);
-                    console.log(`Found attacking piece: ${piece.type} at ${pieceSquare}`);
+    const oppositeColor = kingColor === 'w' ? 'b' : 'w';
+    
+    // Start with a simple approach - check the last move made
+    const history = chess.history({ verbose: true });
+    if (history.length > 0) {
+        const lastMove = history[history.length - 1];
+        
+        // Check if the piece that just moved could be giving check
+        const movedPiece = chess.get(lastMove.to);
+        if (movedPiece && movedPiece.color === oppositeColor) {
+            console.log(`Checking if ${movedPiece.type} at ${lastMove.to} is giving check`);
+            
+            if (isSquareAttackedByPiece(movedPiece, lastMove.to, kingSquare)) {
+                attackingSquares.push(lastMove.to);
+                console.log(`Last moved piece is giving check!`);
+            }
+        }
+        
+        // Also check if this was a discovered attack (piece moved away revealing another attacker)
+        if (lastMove.from) {
+            // Look for pieces that might now attack the king along the line where the piece moved from
+            const board = chess.board();
+            for (let rankIdx = 0; rankIdx < 8; rankIdx++) {
+                for (let fileIdx = 0; fileIdx < 8; fileIdx++) {
+                    const piece = board[rankIdx][fileIdx];
+                    if (piece && piece.color === oppositeColor) {
+                        const pieceSquare = files[fileIdx] + (8 - rankIdx);
+                        
+                        // Skip the piece we already checked
+                        if (pieceSquare === lastMove.to) continue;
+                        
+                        if (isSquareAttackedByPiece(piece, pieceSquare, kingSquare)) {
+                            if (!attackingSquares.includes(pieceSquare)) {
+                                attackingSquares.push(pieceSquare);
+                                console.log(`Found discovered attack from ${piece.type} at ${pieceSquare}`);
+                            }
+                        }
+                    }
                 }
             }
         }
     }
     
-    console.log('Attacking squares:', attackingSquares);
+    // If we didn't find any attackers yet, do a full board scan
+    if (attackingSquares.length === 0) {
+        console.log('No attackers found in last move, doing full scan...');
+        const board = chess.board();
+        for (let rankIdx = 0; rankIdx < 8; rankIdx++) {
+            for (let fileIdx = 0; fileIdx < 8; fileIdx++) {
+                const piece = board[rankIdx][fileIdx];
+                if (piece && piece.color === oppositeColor) {
+                    const pieceSquare = files[fileIdx] + (8 - rankIdx);
+                    
+                    if (isSquareAttackedByPiece(piece, pieceSquare, kingSquare)) {
+                        attackingSquares.push(pieceSquare);
+                        console.log(`Full scan found attacking piece ${piece.type} at ${pieceSquare}`);
+                    }
+                }
+            }
+        }
+    }
+    
+    console.log('Final attacking squares:', attackingSquares);
     return attackingSquares;
 }
 
 function canPieceAttackSquare(piece, fromSquare, toSquare) {
-    // Simple test: try to make a move from piece square to target square
-    // and see if it would be legal (ignoring check constraints)
-    try {
-        // Create a temporary copy to test the move
-        const tempChess = new Chess(chess.fen());
-        const move = tempChess.move({ from: fromSquare, to: toSquare });
-        if (move) {
-            // If the move was successful, undo it and return true
-            return true;
-        }
-    } catch (e) {
-        // Move failed
-    }
-    
-    // Alternative: use chess.js attacks method if available
-    // or implement piece-specific attack logic
+    // Much simpler approach - just use the piece movement logic
     return isSquareAttackedByPiece(piece, fromSquare, toSquare);
 }
 
@@ -604,4 +637,17 @@ document.addEventListener('DOMContentLoaded', function() {
             clearSelectionAndIndicators();
         }
     });
+
+    // Debug button for testing attacking piece animation
+    const debugButton = document.getElementById('debug-test');
+    if (debugButton) {
+        debugButton.addEventListener('click', function() {
+            console.log('Testing attack animation...');
+            const testSquare = document.querySelector('[data-square="e4"]');
+            if (testSquare) {
+                testSquare.classList.toggle('attacking-piece');
+                console.log('Toggled attacking-piece class on e4');
+            }
+        });
+    }
 });
