@@ -9,8 +9,24 @@ class MoveHistoryUI {
     setupEventListeners() {
         if (this.clearButton) {
             this.clearButton.addEventListener('click', () => {
-                this.clearHistory();
+                this.confirmClearHistory();
             });
+        }
+    }
+
+    // Show confirmation dialog before clearing history
+    confirmClearHistory() {
+        const moveCount = this.getMoveCount();
+        
+        if (moveCount === 0) {
+            // No moves to clear
+            return;
+        }
+
+        const confirmMessage = `Are you sure you want to clear the move history?\n\nThis will permanently delete ${moveCount} move${moveCount === 1 ? '' : 's'} and cannot be undone.`;
+        
+        if (confirm(confirmMessage)) {
+            this.clearHistory();
         }
     }
     
