@@ -10,7 +10,6 @@ The entire point of this project is to help me in making more interactive websit
 - View of previous moves and such on the side bar with the proper notation
     - Should also add a feature to be able to export that, maybe will help in further analysis of the game
 - Make the gameplay a bit more fluid, I dunno how to do that but there must be a way no?
-- Make it so that how the king get's gyrating things around his square when he's in check, there should be such cubes too around the checker piece but in yellow
 
 ## Devlogs:
 - 23 Sept 2025
@@ -52,3 +51,6 @@ The entire point of this project is to help me in making more interactive websit
         - But, there's a noice singular plural form condition I used :p
     - Added so that a warning message pops up when you access via mobile, was pretty easy tbh...
         - I just dont know when it'll be popping up and all, I'm kinda too laxy to test it from my mobile and all
+    - Added the gyrating feature thing for whatever the piece that's checking the king is
+    - Added a feature where if you move a piece, then the previous square and the current square light up a lil, should help with noticing the moves done by the ai cause it's too fast
+        - Maybe I should add some delay to the ai? but that'd break the fluidity at times...
