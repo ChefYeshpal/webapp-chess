@@ -39,4 +39,10 @@ The entire point of this project is to help me in making more interactive websit
         - Engine also automatically retries to start if "engine not ready" error comes
         - Also added ai toggle, so can only use stockfish for a few moves if wanting to.
 - 25 Sept 2025
-    -
+    - Added king check find out mechanics
+        - updateCheckStatus function: It manages the check visual indicators for the king
+        - Called after every move from updateBoard
+    - findKingSquare(color)
+        - Locates the king piece on specific color on the board
+        - parameters are either w (white) or b (black)
+    - Added css animations for the king square when the king is in check
