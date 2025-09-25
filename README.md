@@ -10,7 +10,6 @@ The entire point of this project is to help me in making more interactive websit
 - View of previous moves and such on the side bar with the proper notation
     - Should also add a feature to be able to export that, maybe will help in further analysis of the game
 - Make the gameplay a bit more fluid, I dunno how to do that but there must be a way no?
-- Add a alert screen or something that basically gives a message if someone's using the app in mobile, that it's not optimised for mobile
 - Make it so that how the king get's gyrating things around his square when he's in check, there should be such cubes too around the checker piece but in yellow
 
 ## Devlogs:
@@ -51,3 +50,5 @@ The entire point of this project is to help me in making more interactive websit
     - Added move history dialogue
         - Also added a delete history button, dunno where it would be used tho
         - But, there's a noice singular plural form condition I used :p
+    - Added so that a warning message pops up when you access via mobile, was pretty easy tbh...
+        - I just dont know when it'll be popping up and all, I'm kinda too laxy to test it from my mobile and all
