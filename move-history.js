@@ -1,3 +1,7 @@
+// For previous moves on the board
+// Will add something so that one can export the moves later
+// Uses chess.js for move notations, so it should be like legacy chess or something... I dunno, I didn't learn chess notations really...
+
 class MoveHistoryUI {
     constructor() {
         this.moveList = document.getElementById('move-list');
