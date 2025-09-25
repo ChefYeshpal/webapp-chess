@@ -200,6 +200,12 @@ function movePiece(from, to, promotion) {
         return;
     }
 
+    // Add move to history UI
+    if (moveHistoryUI && move) {
+        const moveCount = chess.history().length;
+        moveHistoryUI.addMove(move, moveCount);
+    }
+
     updateBoard();
     clearSelectionAndIndicators();
 
