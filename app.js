@@ -637,17 +637,4 @@ document.addEventListener('DOMContentLoaded', function() {
             clearSelectionAndIndicators();
         }
     });
-
-    // Debug button for testing attacking piece animation
-    const debugButton = document.getElementById('debug-test');
-    if (debugButton) {
-        debugButton.addEventListener('click', function() {
-            console.log('Testing attack animation...');
-            const testSquare = document.querySelector('[data-square="e4"]');
-            if (testSquare) {
-                testSquare.classList.toggle('attacking-piece');
-                console.log('Toggled attacking-piece class on e4');
-            }
-        });
-    }
 });
