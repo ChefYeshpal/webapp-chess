@@ -120,6 +120,7 @@ function updateBoard() {
         });
     });
     updateTurnIndicator();
+    updateCheckStatus(); // To check turn status
 }
 
 function getLegalMoves(fromSquare) {
@@ -337,6 +338,24 @@ function getGameOverText() {
         return reason;
     }
     return '';
+}
+
+function updateCheckStatus() {
+    // Clear any existing check indicators
+    document.querySelectorAll('.king-in-check').forEach(square => {
+        square.classList.remove('king-in-check');
+    });
+    
+    // If the player is in check, then highlight their king
+    if (chess.in_check()) {
+        const kingSquare = findKingSquare(chess.turn());
+        if (kingSquare) {
+            const kingElement = document.querySelector(`[data-square="${kingSquare}"]`);
+            if (kingElement) {
+                kingElement.classList.add('king-in-check');
+            }
+        }
+    }
 }
 
 
