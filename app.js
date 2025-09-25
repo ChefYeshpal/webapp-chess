@@ -348,8 +348,9 @@ function getGameOverText() {
 
 function updateCheckStatus() {
     const currentCheckSquares = document.querySelectorAll('.king-in-check');
+    const currentAttackingSquares = document.querySelectorAll('.attacking-piece');
     
-    // If the player is in check, then highlight their king
+    // If the player is in check, then highlight their king and the attacking piece(s)
     if (chess.in_check()) {
         const kingSquare = findKingSquare(chess.turn());
         if (kingSquare) {
@@ -363,6 +364,20 @@ function updateCheckStatus() {
                 kingElement.classList.add('king-in-check');
             }
         }
+
+        // Find and highlight the attacking piece(s)
+        const attackingSquares = findAttackingPieces(chess.turn());
+        attackingSquares.forEach(square => {
+            const squareElement = document.querySelector(`[data-square="${square}"]`);
+            if (squareElement && !squareElement.classList.contains('attacking-piece')) {
+                // Remove any existing attacking indicators first
+                currentAttackingSquares.forEach(attackSquare => {
+                    attackSquare.classList.remove('attacking-piece');
+                });
+                // Add attacking indicator to the new piece
+                squareElement.classList.add('attacking-piece');
+            }
+        });
     } else {
         // Check is being removed - play shrink animation first
         currentCheckSquares.forEach(square => {
@@ -370,6 +385,15 @@ function updateCheckStatus() {
             // Remove all classes after animation completes
             setTimeout(() => {
                 square.classList.remove('king-in-check', 'king-check-ending');
+            }, 300); // Match the shrink animation duration
+        });
+
+        // Remove attacking piece indicators
+        currentAttackingSquares.forEach(square => {
+            square.classList.add('attacking-piece-ending');
+            // Remove all classes after animation completes
+            setTimeout(() => {
+                square.classList.remove('attacking-piece', 'attacking-piece-ending');
             }, 300); // Match the shrink animation duration
         });
     }
@@ -386,6 +410,122 @@ function findKingSquare(color) {
         }
     }
     return null;
+}
+
+function findAttackingPieces(kingColor) {
+    const attackingSquares = [];
+    const kingSquare = findKingSquare(kingColor);
+    
+    if (!kingSquare) return attackingSquares;
+
+    // Get the opposite color (the one giving check)
+    const oppositeColor = kingColor === 'w' ? 'b' : 'w';
+    
+    console.log(`Finding pieces attacking ${kingColor} king at ${kingSquare}`);
+    
+    // Use a different approach - check which squares attack the king square
+    // by testing if moves from those squares include the king square
+    const board = chess.board();
+    for (let rankIdx = 0; rankIdx < 8; rankIdx++) {
+        for (let fileIdx = 0; fileIdx < 8; fileIdx++) {
+            const piece = board[rankIdx][fileIdx];
+            if (piece && piece.color === oppositeColor) {
+                const pieceSquare = files[fileIdx] + (8 - rankIdx);
+                
+                // Check if this piece can attack the king square
+                if (canPieceAttackSquare(piece, pieceSquare, kingSquare)) {
+                    attackingSquares.push(pieceSquare);
+                    console.log(`Found attacking piece: ${piece.type} at ${pieceSquare}`);
+                }
+            }
+        }
+    }
+    
+    console.log('Attacking squares:', attackingSquares);
+    return attackingSquares;
+}
+
+function canPieceAttackSquare(piece, fromSquare, toSquare) {
+    // Simple test: try to make a move from piece square to target square
+    // and see if it would be legal (ignoring check constraints)
+    try {
+        // Create a temporary copy to test the move
+        const tempChess = new Chess(chess.fen());
+        const move = tempChess.move({ from: fromSquare, to: toSquare });
+        if (move) {
+            // If the move was successful, undo it and return true
+            return true;
+        }
+    } catch (e) {
+        // Move failed
+    }
+    
+    // Alternative: use chess.js attacks method if available
+    // or implement piece-specific attack logic
+    return isSquareAttackedByPiece(piece, fromSquare, toSquare);
+}
+
+function isSquareAttackedByPiece(piece, fromSquare, toSquare) {
+    const fromFile = fromSquare.charCodeAt(0) - 'a'.charCodeAt(0);
+    const fromRank = parseInt(fromSquare[1]) - 1;
+    const toFile = toSquare.charCodeAt(0) - 'a'.charCodeAt(0);
+    const toRank = parseInt(toSquare[1]) - 1;
+    
+    const fileDiff = Math.abs(toFile - fromFile);
+    const rankDiff = Math.abs(toRank - fromRank);
+    
+    switch (piece.type) {
+        case 'p': // Pawn
+            const direction = piece.color === 'w' ? 1 : -1;
+            return (rankDiff === 1 && fileDiff === 1 && (toRank - fromRank) === direction);
+            
+        case 'r': // Rook
+            return (fileDiff === 0 || rankDiff === 0) && isPathClear(fromSquare, toSquare);
+            
+        case 'n': // Knight
+            return (fileDiff === 2 && rankDiff === 1) || (fileDiff === 1 && rankDiff === 2);
+            
+        case 'b': // Bishop
+            return fileDiff === rankDiff && isPathClear(fromSquare, toSquare);
+            
+        case 'q': // Queen
+            return ((fileDiff === 0 || rankDiff === 0) || (fileDiff === rankDiff)) && isPathClear(fromSquare, toSquare);
+            
+        case 'k': // King
+            return fileDiff <= 1 && rankDiff <= 1;
+            
+        default:
+            return false;
+    }
+}
+
+function isPathClear(fromSquare, toSquare) {
+    const fromFile = fromSquare.charCodeAt(0) - 'a'.charCodeAt(0);
+    const fromRank = parseInt(fromSquare[1]) - 1;
+    const toFile = toSquare.charCodeAt(0) - 'a'.charCodeAt(0);
+    const toRank = parseInt(toSquare[1]) - 1;
+    
+    const fileDiff = toFile - fromFile;
+    const rankDiff = toRank - fromRank;
+    const steps = Math.max(Math.abs(fileDiff), Math.abs(rankDiff));
+    
+    if (steps <= 1) return true; // Adjacent squares
+    
+    const fileStep = fileDiff === 0 ? 0 : fileDiff / Math.abs(fileDiff);
+    const rankStep = rankDiff === 0 ? 0 : rankDiff / Math.abs(rankDiff);
+    
+    const board = chess.board();
+    
+    for (let i = 1; i < steps; i++) {
+        const checkFile = fromFile + (fileStep * i);
+        const checkRank = fromRank + (rankStep * i);
+        
+        if (board[7 - checkRank][checkFile] !== null) {
+            return false; // Path is blocked
+        }
+    }
+    
+    return true;
 }
 
 
