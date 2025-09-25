@@ -38,3 +38,5 @@ The entire point of this project is to help me in making more interactive websit
         - FEN integration makes it work with any board position
         - Engine also automatically retries to start if "engine not ready" error comes
         - Also added ai toggle, so can only use stockfish for a few moves if wanting to.
+- 25 Sept 2025
+    -
