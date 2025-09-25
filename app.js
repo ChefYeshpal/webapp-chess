@@ -341,20 +341,31 @@ function getGameOverText() {
 }
 
 function updateCheckStatus() {
-    // Clear any existing check indicators
-    document.querySelectorAll('.king-in-check').forEach(square => {
-        square.classList.remove('king-in-check');
-    });
+    const currentCheckSquares = document.querySelectorAll('.king-in-check');
     
     // If the player is in check, then highlight their king
     if (chess.in_check()) {
         const kingSquare = findKingSquare(chess.turn());
         if (kingSquare) {
             const kingElement = document.querySelector(`[data-square="${kingSquare}"]`);
-            if (kingElement) {
+            if (kingElement && !kingElement.classList.contains('king-in-check')) {
+                // Remove any existing check indicators first
+                currentCheckSquares.forEach(square => {
+                    square.classList.remove('king-in-check');
+                });
+                // Add check indicator to the new king
                 kingElement.classList.add('king-in-check');
             }
         }
+    } else {
+        // Check is being removed - play shrink animation first
+        currentCheckSquares.forEach(square => {
+            square.classList.add('king-check-ending');
+            // Remove all classes after animation completes
+            setTimeout(() => {
+                square.classList.remove('king-in-check', 'king-check-ending');
+            }, 300); // Match the shrink animation duration
+        });
     }
 }
 
