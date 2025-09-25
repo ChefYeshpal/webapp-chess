@@ -46,3 +46,6 @@ The entire point of this project is to help me in making more interactive websit
         - Locates the king piece on specific color on the board
         - parameters are either w (white) or b (black)
     - Added css animations for the king square when the king is in check
+    - Added move history dialogue
+        - Also added a delete history button, dunno where it would be used tho
+        - But, there's a noice singular plural form condition I used :p
