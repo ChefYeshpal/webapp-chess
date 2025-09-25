@@ -200,8 +200,8 @@ function movePiece(from, to, promotion) {
         return;
     }
 
-    // Add move to history UI
-    if (moveHistoryUI && move) {
+    // Add move to history UI (check if moveHistoryUI exists and is initialized)
+    if (typeof moveHistoryUI !== 'undefined' && moveHistoryUI && move) {
         const moveCount = chess.history().length;
         moveHistoryUI.addMove(move, moveCount);
     }
@@ -420,6 +420,21 @@ document.addEventListener('DOMContentLoaded', function() {
         computerColor = orientation === 'white' ? 'b' : 'w';
         introOverlay.classList.add('hidden');
         gameWrapper.classList.remove('hidden');
+        
+        // Show move history panel
+        const moveHistoryPanel = document.getElementById('move-history-panel');
+        if (moveHistoryPanel) {
+            moveHistoryPanel.classList.remove('hidden');
+        }
+        
+        // Initialize move history UI if not already done
+        if (typeof moveHistoryUI === 'undefined' || !moveHistoryUI) {
+            // Import the MoveHistoryUI class if the script is loaded
+            if (typeof MoveHistoryUI !== 'undefined') {
+                moveHistoryUI = new MoveHistoryUI();
+            }
+        }
+        
         if(mainTitle) mainTitle.classList.remove('hidden');
         createBoard();
 
