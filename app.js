@@ -358,6 +358,19 @@ function updateCheckStatus() {
     }
 }
 
+function findKingSquare(color) {
+    const board = chess.board();
+    for (let rankIdx = 0; rankIdx < 8; rankIdx++) {
+        for (let fileIdx = 0; fileIdx < 8; fileIdx++) {
+            const piece = board[rankIdx][fileIdx];
+            if (piece && piece.type === 'k' && piece.color === color) {
+                return files[fileIdx] + (8 - rankIdx);
+            }
+        }
+    }
+    return null;
+}
+
 
 // Function to make stockfish play a move
 function makeStockfishMove() {
