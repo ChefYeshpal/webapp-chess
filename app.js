@@ -103,7 +103,7 @@ function showNotification(message) {
     notificationTimeout = setTimeout(() => {
         notificationArea.classList.remove('show');
         notificationArea.classList.add('hidden');
-    }, 3000); // Message disappears after 3 seconds
+    }, 1500); // Message disappears after 1.5 seconds (faster)
 }
 
 function showGameOverDialog(reason) {
@@ -347,12 +347,27 @@ function attemptMove(from, to) {
         const toRank = to.charAt(1);
         // Check if pawn is moving to the promotion rank (8th for white, 1st for black)
         if ((piece.color === 'w' && toRank === '8') || (piece.color === 'b' && toRank === '1')) {
-            // Test if this is a legal promotion move by trying with queen promotion
-            const testMove = chess.move({ from, to, promotion: 'q' });
-            if (testMove) {
-                // It's a legal promotion move, undo the test and show promotion dialog
-                chess.undo();
-                isPromotionMove = true;
+            if (isAnarchyMode) {
+                // In anarchy mode, test with the piece's current anarchy power
+                const originalPiece = chess.get(from);
+                const anarchyType = anarchyPiecePowers.get(from);
+                if (anarchyType) {
+                    chess.put({ type: anarchyType, color: originalPiece.color }, from);
+                    const testMove = chess.move({ from, to, promotion: 'q' });
+                    if (testMove) {
+                        chess.undo();
+                        isPromotionMove = true;
+                    }
+                    chess.put(originalPiece, from); // Restore original piece
+                }
+            } else {
+                // Normal chess: test if this is a legal promotion move by trying with queen promotion
+                const testMove = chess.move({ from, to, promotion: 'q' });
+                if (testMove) {
+                    // It's a legal promotion move, undo the test and show promotion dialog
+                    chess.undo();
+                    isPromotionMove = true;
+                }
             }
         }
     }
@@ -373,7 +388,34 @@ function attemptMove(from, to) {
  * @param {string} [promotion] - Promotion piece for pawn promotion ('q', 'r', 'b', 'n')
  */
 function movePiece(from, to, promotion) {
-    const move = chess.move({ from, to, promotion });
+    let move = null;
+    
+    if (isAnarchyMode) {
+        // In anarchy mode, temporarily replace the piece with its randomized power
+        const originalPiece = chess.get(from);
+        if (originalPiece) {
+            const anarchyType = anarchyPiecePowers.get(from);
+            if (anarchyType) {
+                // Replace piece with its anarchy power
+                chess.put({ type: anarchyType, color: originalPiece.color }, from);
+                // Try the move with the anarchy power
+                move = chess.move({ from, to, promotion });
+                if (move) {
+                    // Move succeeded, but we need to restore the original piece type in the destination
+                    chess.put(originalPiece, to);
+                    // Update the anarchy power mapping for the new position
+                    anarchyPiecePowers.set(to, anarchyType);
+                    anarchyPiecePowers.delete(from);
+                } else {
+                    // Move failed, restore original piece
+                    chess.put(originalPiece, from);
+                }
+            }
+        }
+    } else {
+        // Normal chess mode
+        move = chess.move({ from, to, promotion });
+    }
 
     if (move === null) {
         // Move is illegal - flash the source square to indicate error
