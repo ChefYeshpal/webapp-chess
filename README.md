@@ -7,6 +7,7 @@ The entire point of this project is to help me in making more interactive websit
 ## Stuff I wanna add:
 - Toggles for:
     - Using keyboard keystrokes to move the pieces/using mouse to move the pieces
+    - Add a game over dialogue with an option to go to anarchy chess
 
 ## Devlogs:
 - 23 Sept 2025
