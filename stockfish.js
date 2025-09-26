@@ -1,10 +1,25 @@
-// Create a chess engine as a webworker
+/**
+ * Chess Engine Interface
+ * 
+ * Manages communication with the chess engine web worker.
+ * Handles UCI protocol communication and provides a simple API for getting moves.
+ * 
+ * The engine worker implements a basic random move generator as a placeholder
+ * for a more sophisticated chess engine like Stockfish.
+ */
+
+/** @type {Worker} Web worker instance running the chess engine */
 const stockfish = new Worker('./stockfish-worker.js');
 
-// Flag to track if stockfish is ready
+/** @type {boolean} Flag to track if the chess engine is initialized and ready */
 let stockfishReady = false;
 
-// Listen for stockfish messages
+/**
+ * Main message handler for engine responses
+ * Processes UCI protocol messages from the worker
+ * 
+ * @param {MessageEvent} event - Message from the chess engine worker
+ */
 stockfish.onmessage = function(event) {
     const line = event.data;
     console.log('Engine says:', line);
@@ -15,28 +30,46 @@ stockfish.onmessage = function(event) {
     }
 };
 
-// Handle worker errors
+/**
+ * Error handler for worker communication issues
+ * Logs any errors that occur in the chess engine worker
+ * 
+ * @param {ErrorEvent} error - Error event from the worker
+ */
 stockfish.onerror = function(error) {
     console.error('Chess engine worker error:', error);
 };
 
-// Send initial UCI command to start the engine
+// Initialize the engine by sending the UCI command
 stockfish.postMessage('uci');
 
-// Function to get chess engine best move for a given FEN position
+/**
+ * Requests the best move from the chess engine for a given position
+ * 
+ * @param {string} fen - FEN string representing the current board position
+ * @param {function} callback - Callback function to receive the engine's move
+ *                              Called with move string (e.g., 'e2e4') or null if no move
+ */
 function fetchStockfishMove(fen, callback) {
     if (!stockfishReady) {
         console.warn("Chess engine is not ready yet!");
-        // Wait a bit and try again
+        // Retry after a short delay if engine isn't initialized
         setTimeout(() => fetchStockfishMove(fen, callback), 100);
         return;
     }
     
     console.log('Requesting move for position:', fen);
+    
+    // Send position and calculation command to the engine
     stockfish.postMessage('position fen ' + fen);
-    stockfish.postMessage('go depth 5'); 
+    stockfish.postMessage('go depth 5'); // Request move calculation at depth 5
 
-    // Set up a temporary message handler for this move request
+    /**
+     * Temporary message handler for this specific move request
+     * Listens for the engine's response and calls the callback
+     * 
+     * @param {MessageEvent} event - Response from the chess engine
+     */
     const handleMoveResponse = function(event) {
         const line = event.data;
         console.log('Engine response:', line);
@@ -44,11 +77,15 @@ function fetchStockfishMove(fen, callback) {
         if (line.startsWith('bestmove')) {
             const move = line.split(' ')[1];
             console.log('Engine suggests move:', move);
-            // Remove this handler and restore the original
+            
+            // Clean up: remove this temporary handler
             stockfish.removeEventListener('message', handleMoveResponse);
+            
+            // Return the move to the callback
             callback(move);
         }
     };
     
+    // Attach the temporary handler for this move request
     stockfish.addEventListener('message', handleMoveResponse);
 }

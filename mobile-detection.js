@@ -1,41 +1,57 @@
-// Mobile Detection and Warning System
+/**
+ * Mobile Detection and Warning System
+ * 
+ * Detects mobile devices and displays a humorous warning message
+ * informing users that the chess application is not optimized for mobile viewing.
+ * Uses multiple detection methods for better accuracy.
+ */
 class MobileDetection {
+    /**
+     * Initialize the mobile detection system
+     */
     constructor() {
         this.init();
     }
 
-    // Detect if user is on mobile device
+    /**
+     * Detects if the user is on a mobile device using multiple methods
+     * @returns {boolean} True if mobile device is detected
+     */
     isMobile() {
         const userAgent = navigator.userAgent || navigator.vendor || window.opera;
         
-        // Check for mobile user agents
+        // Primary detection: Check for mobile user agent strings
         const mobileRegex = /Android|webOS|iPhone|iPod|BlackBerry|IEMobile|Opera Mini/i;
         
-        // Check screen size (fallback)
+        // Secondary detection: Check screen size (fallback method)
         const smallScreen = window.innerWidth <= 768 || window.innerHeight <= 600;
         
-        // Check for touch capability
+        // Tertiary detection: Check for touch capability
         const touchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
         
         return mobileRegex.test(userAgent) || (smallScreen && touchDevice);
     }
 
-    // Create and show the mobile warning overlay
+    /**
+     * Creates and displays the mobile warning overlay with humorous messaging
+     * Dynamically builds the warning interface with appropriate styling and actions
+     */
     showMobileWarning() {
-        // Create overlay container
+        // Create main overlay container
         const overlay = document.createElement('div');
         overlay.id = 'mobile-warning-overlay';
         overlay.className = 'mobile-warning-overlay';
         
-        // Create content container
+        // Create content wrapper
         const content = document.createElement('div');
         content.className = 'mobile-warning-content';
         
-        // Create warning message
+        // Create warning title with emoji for visual impact
         const title = document.createElement('h2');
         title.innerHTML = '⚠️ PUNY DEVICE DETECTED ⚠️';
         title.className = 'mobile-warning-title';
         
+        // Create humorous warning message
         const message = document.createElement('p');
         message.innerHTML = `
             This website is <strong>NOT</strong> optimized for mobile viewing 
@@ -45,20 +61,20 @@ class MobileDetection {
         `;
         message.className = 'mobile-warning-message';
         
-        // Create button container
+        // Create container for action buttons
         const buttonContainer = document.createElement('div');
         buttonContainer.className = 'mobile-warning-buttons';
         
-        // Create "Leave" button
+        // Create "Leave" button - attempts to navigate away from the site
         const leaveButton = document.createElement('button');
         leaveButton.innerHTML = '🚪 Okay, I\'ma leave then';
         leaveButton.className = 'mobile-warning-btn leave-btn';
         leaveButton.onclick = () => {
-            // Take user to browser homepage or close tab
+            // Try multiple methods to navigate away or close tab
             try {
                 window.location.href = 'about:home';
             } catch (e) {
-                // Fallback for browsers that don't support about:home
+                // Fallback: go back in history then attempt to close
                 window.history.back();
                 setTimeout(() => {
                     window.close();
@@ -66,7 +82,7 @@ class MobileDetection {
             }
         };
         
-        // Create "Continue" button
+        // Create "Continue" button - dismisses the warning
         const continueButton = document.createElement('button');
         continueButton.innerHTML = '💪 Nah, I wanna continue';
         continueButton.className = 'mobile-warning-btn continue-btn';
@@ -74,7 +90,7 @@ class MobileDetection {
             this.hideMobileWarning();
         };
         
-        // Assemble the elements
+        // Assemble all elements into the overlay structure
         buttonContainer.appendChild(leaveButton);
         buttonContainer.appendChild(continueButton);
         
@@ -84,38 +100,46 @@ class MobileDetection {
         
         overlay.appendChild(content);
         
-        // Add to page
+        // Add overlay to the page
         document.body.appendChild(overlay);
         
-        // Add some dramatic entrance animation
+        // Trigger entrance animation after a brief delay
         setTimeout(() => {
             overlay.classList.add('show');
         }, 100);
     }
 
-    // Hide the mobile warning overlay
+    /**
+     * Hides the mobile warning overlay with exit animation
+     * Removes the overlay from DOM after animation completes
+     */
     hideMobileWarning() {
         const overlay = document.getElementById('mobile-warning-overlay');
         if (overlay) {
             overlay.classList.add('hide');
+            // Remove element after animation finishes
             setTimeout(() => {
                 overlay.remove();
             }, 300);
         }
     }
 
-    // Initialize the mobile detection
+    /**
+     * Initializes the mobile detection system
+     * Sets up detection on page load and window resize events
+     */
     init() {
-        // Check if user is on mobile when page loads
+        // Check for mobile device when page initially loads
         if (this.isMobile()) {
-            // Show warning after a brief delay to let page load
+            // Delay warning to allow page to fully load first
             setTimeout(() => {
                 this.showMobileWarning();
             }, 500);
         }
         
-        // Also check on window resize (in case user rotates device or changes window size)
+        // Monitor for window resize events (device rotation, window resizing)
         window.addEventListener('resize', () => {
+            // Show warning if mobile is detected and warning isn't already shown
             if (this.isMobile() && !document.getElementById('mobile-warning-overlay')) {
                 this.showMobileWarning();
             }
@@ -123,15 +147,23 @@ class MobileDetection {
     }
 }
 
-// Initialize mobile detection when DOM is loaded
+// === INITIALIZATION ===
+
+/**
+ * Initialize mobile detection when DOM is fully loaded
+ * Uses DOMContentLoaded event to ensure all elements are available
+ */
 document.addEventListener('DOMContentLoaded', () => {
     new MobileDetection();
 });
 
-// Also initialize immediately if DOM is already loaded (just in case)
+/**
+ * Fallback initialization in case DOM is already loaded when this script runs
+ * Handles cases where the script is loaded after DOMContentLoaded has already fired
+ */
 if (document.readyState === 'loading') {
-    // DOM is still loading, wait for DOMContentLoaded
+    // DOM is still loading, wait for DOMContentLoaded event
 } else {
-    // DOM is already loaded
+    // DOM is already loaded, initialize immediately
     new MobileDetection();
 }
