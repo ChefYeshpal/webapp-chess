@@ -1088,9 +1088,6 @@ h1 {
 }
 
 #notification-area.hidden {
-    opacity: 0;
-    visibility: hidden;
-    transform: translateY(-50%) translateX(30px) scale(0.95);
     animation: fadeOutSlide 0.25s cubic-bezier(0.55, 0.085, 0.68, 0.53) forwards;
 }
 
