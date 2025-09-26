@@ -16,6 +16,8 @@
 
 let isAnarchyMode = false;
 const anarchyPiecePowers = new Map();
+const notificationArea = document.getElementById('notification-area');
+let notificationTimeout;
 
 /** @type {string|null} Color of the computer opponent ('w' for white, 'b' for black, null if disabled) */
 let computerColor = null;
@@ -84,6 +86,24 @@ function randomizePiecePowers() {
             console.log(`Anarchy Power: ${square} (${piece.type}) is now a ${randomPower}`);
         }
     }
+}
+
+/**
+ * Displays a notification message on the screen for a short duration.
+ * @param {string} message - The message to display.
+ */
+function showNotification(message) {
+    if (notificationTimeout) {
+        clearTimeout(notificationTimeout);
+    }
+    notificationArea.textContent = message;
+    notificationArea.classList.remove('hidden');
+    notificationArea.classList.add('show');
+
+    notificationTimeout = setTimeout(() => {
+        notificationArea.classList.remove('show');
+        notificationArea.classList.add('hidden');
+    }, 3000); // Message disappears after 3 seconds
 }
 
 function showGameOverDialog(reason) {
@@ -290,7 +310,14 @@ function handleSquareClick(e) {
     }
 
     // If no piece on square or it's the wrong player's turn, clear selection
-    if (!piece || piece.color !== chess.turn()) {
+    if (!piece) {
+        showNotification("You can't select an empty square.");
+        clearSelectionAndIndicators();
+        return;
+    }
+    
+    if (piece.color !== chess.turn()) {
+        showNotification("It's not your turn to move that piece.");
         clearSelectionAndIndicators();
         return;
     }
@@ -300,6 +327,9 @@ function handleSquareClick(e) {
     selectedSquare = clickedSquare;
     clickedSquareEl.classList.add('selected');
     const legalMoves = getLegalMoves(clickedSquare);
+    if (legalMoves.length === 0) {
+        showNotification("This piece has no legal moves right now.");
+    }
     showLegalMoveIndicators(legalMoves);
 }
 
@@ -455,7 +485,13 @@ function handleDragStart(e) {
     const piece = chess.get(pieceSquare);
 
     // Prevent dragging if no piece or wrong turn
-    if (!piece || piece.color !== chess.turn()) {
+    if (!piece) {
+        e.preventDefault();
+        return;
+    }
+    
+    if (piece.color !== chess.turn()) {
+        showNotification("It's not your turn to move that piece.");
         e.preventDefault();
         return;
     }
@@ -474,6 +510,9 @@ function handleDragStart(e) {
     clearSelectionAndIndicators();
     selectedSquare = pieceSquare;
     const legalMoves = getLegalMoves(pieceSquare);
+    if (legalMoves.length === 0) {
+        showNotification("This piece has no legal moves right now.");
+    }
     showLegalMoveIndicators(legalMoves);
 }
 
@@ -515,6 +554,7 @@ function handleDrop(e) {
     
     // Only allow drops on legal move squares
     if (!toSquareEl.classList.contains('legal-move')) {
+        showNotification("That is not a legal move for this piece.");
         return;
     }
     
@@ -949,4 +989,5 @@ anarchyButton.addEventListener('click', () => {
     randomizePiecePowers();
     updateBoard();
     gameOverModal.style.display = 'none';
+    showNotification("Anarchy Mode: All piece moves are randomized!");
 });
