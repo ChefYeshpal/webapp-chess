@@ -14,6 +14,9 @@
 
 // === GLOBAL VARIABLES ===
 
+let isAnarchyMode = false;
+const anarchyPiecePowers = new Map();
+
 /** @type {string|null} Color of the computer opponent ('w' for white, 'b' for black, null if disabled) */
 let computerColor = null;
 
@@ -65,6 +68,23 @@ const pieceMap = {
 
 /** @type {string[]} Available pieces for pawn promotion (Queen, Rook, Bishop, Knight) */
 const promotionPieces = ['q', 'r', 'b', 'n']; // Queen, Rook, Bishop, Knight being the pieces that pawn can be promoted to
+
+/**
+ * Randomizes the "power" of each piece on the board for Anarchy Mode.
+ * Each piece is assigned the move set of a random piece type.
+ */
+function randomizePiecePowers() {
+    anarchyPiecePowers.clear();
+    const pieceTypes = ['p', 'r', 'n', 'b', 'q', 'k'];
+    for (const square of chess.SQUARES) {
+        const piece = chess.get(square);
+        if (piece) {
+            const randomPower = pieceTypes[Math.floor(Math.random() * pieceTypes.length)];
+            anarchyPiecePowers.set(square, randomPower);
+            console.log(`Anarchy Power: ${square} (${piece.type}) is now a ${randomPower}`);
+        }
+    }
+}
 
 function showGameOverDialog(reason) {
   let message = '';
@@ -214,6 +234,27 @@ function updateBoard() {
  * @returns {string[]} Array of legal destination squares
  */
 function getLegalMoves(fromSquare) {
+    if (isAnarchyMode) {
+        const originalPiece = chess.get(fromSquare);
+        if (!originalPiece) return [];
+
+        // Get the randomized power for this piece
+        const anarchyType = anarchyPiecePowers.get(fromSquare);
+        if (!anarchyType) return [];
+
+        // Temporarily replace the piece to get its "anarchy" moves
+        chess.put({ type: anarchyType, color: originalPiece.color }, fromSquare);
+        const moves = chess.moves({
+            square: fromSquare,
+            verbose: true
+        }).map(move => move.to);
+
+        // Restore the original piece
+        chess.put(originalPiece, fromSquare);
+        return moves;
+    }
+
+    // Normal move logic
     const moves = chess.moves({
         square: fromSquare,
         verbose: true
@@ -319,6 +360,12 @@ function movePiece(from, to, promotion) {
     // Update the visual board and clear any selection indicators
     updateBoard();
     clearSelectionAndIndicators();
+
+    // In Anarchy Mode, re-randomize all piece powers after every move
+    if (isAnarchyMode) {
+        console.log("Re-randomizing powers after move...");
+        randomizePiecePowers();
+    }
 
     // Check for game ending conditions
     if (chess.game_over()) {
@@ -833,6 +880,9 @@ document.addEventListener('DOMContentLoaded', function() {
      * @param {string} orientation - Player's color and board orientation ('white' or 'black')
      */
     function startGame(orientation) {
+        isAnarchyMode = false;
+        console.log("Normal Chess game started.");
+
         playerOrientation = orientation;
         // Computer plays the opposite color from the player
         computerColor = orientation === 'white' ? 'b' : 'w';
@@ -893,6 +943,10 @@ okButton.addEventListener('click', () => {
 });
 
 anarchyButton.addEventListener('click', () => {
-  window.open('https://www.reddit.com/r/AnarchyChess/', '_blank');
-  gameOverModal.style.display = 'none';
+    console.log("ANARCHY CHESS ACTIVATED!");
+    isAnarchyMode = true;
+    chess.reset();
+    randomizePiecePowers();
+    updateBoard();
+    gameOverModal.style.display = 'none';
 });
