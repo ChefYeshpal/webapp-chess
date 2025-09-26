@@ -102,7 +102,13 @@ function showNotification(message) {
 
     notificationTimeout = setTimeout(() => {
         notificationArea.classList.remove('show');
-        notificationArea.classList.add('hidden');
+        notificationArea.classList.add('hide-notification');
+        
+        // Use a timeout to truly hide it after the animation
+        setTimeout(() => {
+            notificationArea.classList.add('hidden');
+            notificationArea.classList.remove('hide-notification');
+        }, 250); // Match animation duration
     }, 1500); // Message disappears after 1.5 seconds (faster)
 }
 
