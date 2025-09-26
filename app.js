@@ -23,6 +23,11 @@ let aiEnabled = true; // Track if AI opponent is enabled, also sets default valu
 /** @type {HTMLElement} Main chessboard container element */
 const boardElement = document.getElementById('chessboard');
 
+const gameOverModal = document.getElementById('gameOverModal');
+const gameOverMessage = document.getElementById('gameOverMessage');
+const okButton = document.getElementById('okButton');
+const anarchyButton = document.getElementById('anarchyButton');
+
 /** @type {string[]} Chess board file labels (columns a-h) */
 const files = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];
 
@@ -61,7 +66,18 @@ const pieceMap = {
 /** @type {string[]} Available pieces for pawn promotion (Queen, Rook, Bishop, Knight) */
 const promotionPieces = ['q', 'r', 'b', 'n']; // Queen, Rook, Bishop, Knight being the pieces that pawn can be promoted to
 
-
+function showGameOverDialog(reason) {
+  let message = '';
+  if (reason === 'checkmate') {
+    message = 'You got yourself a <span class="stylized-chess">checkmate</span>.';
+  } else if (reason === 'stalemate') {
+    message = 'You got yourself a <span class="stylized-chess">stalemate</span>.';
+  } else if (reason === 'draw') {
+    message = 'The game is a <span class="stylized-chess">draw</span>.';
+  }
+  gameOverMessage.innerHTML = message;
+  gameOverModal.style.display = 'flex';
+}
 
 // === PROMOTION DIALOG FUNCTIONS ===
 
@@ -306,9 +322,15 @@ function movePiece(from, to, promotion) {
 
     // Check for game ending conditions
     if (chess.game_over()) {
-        setTimeout(() => {
-            alert(getGameOverText());
-        }, 200);
+        let reason = '';
+        if (chess.in_checkmate()) {
+          reason = 'checkmate';
+        } else if (chess.in_stalemate()) {
+          reason = 'stalemate';
+        } else if (chess.in_draw()) {
+          reason = 'draw';
+        }
+        showGameOverDialog(reason);
         return;
     }
 
@@ -864,4 +886,13 @@ document.addEventListener('DOMContentLoaded', function() {
             clearSelectionAndIndicators();
         }
     });
+});
+
+okButton.addEventListener('click', () => {
+  gameOverModal.style.display = 'none';
+});
+
+anarchyButton.addEventListener('click', () => {
+  window.open('https://www.reddit.com/r/AnarchyChess/', '_blank');
+  gameOverModal.style.display = 'none';
 });
