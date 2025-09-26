@@ -248,8 +248,8 @@ function handleSquareClick(e) {
 
 /**
  * Attempts to make a move, handling special cases like pawn promotion
- * @param {string} from - Source square (e.g., 'e7')
- * @param {string} to - Destination square (e.g., 'e8')
+ * @param {string} from - Source square
+ * @param {string} to - Destination square
  */
 function attemptMove(from, to) {
     // Check if this would be a pawn promotion move
