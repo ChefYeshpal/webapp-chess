@@ -7,9 +7,6 @@ The entire point of this project is to help me in making more interactive websit
 ## Stuff I wanna add:
 - Toggles for:
     - Using keyboard keystrokes to move the pieces/using mouse to move the pieces
-- Feature where one's able to export their gameplay (via moves and all) for further analysis
-    - Possibly gonna use the conventional game notation format for this
-- Make the gameplay a bit more fluid, I dunno how to do that but there must be a way no?
 
 ## Devlogs:
 - 23 Sept 2025
@@ -57,4 +54,5 @@ The entire point of this project is to help me in making more interactive websit
     - Added a feature where if you move a piece, then the previous square and the current square light up a lil, should help with noticing the moves done by the ai cause it's too fast
         - Maybe I should add some delay to the ai? but that'd break the fluidity at times...
 - 25 Sept 2024
-    - 
+    - Added a export option for moves
+    - Updated comments
