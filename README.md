@@ -54,7 +54,7 @@ The entire point of this project is to help me in making more interactive websit
     - Added the gyrating feature thing for whatever the piece that's checking the king is
     - Added a feature where if you move a piece, then the previous square and the current square light up a lil, should help with noticing the moves done by the ai cause it's too fast
         - Maybe I should add some delay to the ai? but that'd break the fluidity at times...
-- 26 Sept 2024
+- 26 Sept 2025
     - Added a export option for moves
     - Updated comments
     - Added end game dialogue
@@ -64,3 +64,4 @@ The entire point of this project is to help me in making more interactive websit
         - Basically every piece get's a randomised movement pattern, after every move, each piece's movement pattern get's reset.
         - I dont know how this'll work properly, cause I wont test this... Seriously, I dont have the brainpower to do so
         - This should be able to add a easter egg or something to the game ig?
+- 27 Sept 2025
