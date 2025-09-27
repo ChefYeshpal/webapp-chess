@@ -5,9 +5,9 @@ Built for **siege week 4** (practice week) on hackclub. All it does is allow you
 The entire point of this project is to help me in making more interactive websites and give me some experience in how to integrate opensource stuff in them.
 
 ## Stuff I wanna add:
-- Toggles for:
-    - Using keyboard keystrokes to move the pieces/using mouse to move the pieces
-    - Add a game over dialogue with an option to go to anarchy chess
+- Using keyboard keystrokes to move the pieces/using mouse to move the pieces
+    - Will not be done, as the week is nearly over and I have a festival (Dusshera) to attend to
+
 
 ## Devlogs:
 - 23 Sept 2025
