@@ -1033,6 +1033,15 @@ okButton.addEventListener('click', () => {
 anarchyButton.addEventListener('click', () => {
     console.log("ANARCHY CHESS ACTIVATED!");
     isAnarchyMode = true;
+
+    // Disable AI for Anarchy Mode
+    aiEnabled = false;
+    computerColor = null;
+    const aiToggle = document.getElementById('ai-enabled');
+    if (aiToggle) {
+        aiToggle.checked = false;
+    }
+
     chess.reset();
     randomizePiecePowers();
     updateBoard();
