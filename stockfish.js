@@ -62,7 +62,8 @@ function fetchStockfishMove(fen, callback) {
     
     // Send position and calculation command to the engine
     stockfish.postMessage('position fen ' + fen);
-    stockfish.postMessage('go depth 5'); // Request move calculation at depth 5
+    stockfish.postMessage('go depth 20'); // Request move calculation at a certain depth
+    // More depth = better moves, as the engine think's farther ahead
 
     /**
      * Temporary message handler for this specific move request
