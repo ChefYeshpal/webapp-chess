@@ -65,3 +65,12 @@ The entire point of this project is to help me in making more interactive websit
         - I dont know how this'll work properly, cause I wont test this... Seriously, I dont have the brainpower to do so
         - This should be able to add a easter egg or something to the game ig?
 - 27 Sept 2025
+    - AI get's disabled when anarchy chess starts, this is because ai isn't really good with "Randomised moves", and I dont wanna code more :')
+    - Changed depth in stockfish.js
+        - Should make the engine think farther ahead now, make it a little bit more difficult to beat?
+        - Although, I didn't find it to become harder in any way...
+
+
+## End notes
+I probably wont update this again, at least not until there's something new I want to do in this (which, to be fair, is mostly done anywyas)
+This project was made for Siege week 4, thanks a lot to those guys cause they're single handedly helping me learn javascript.
